@@ -1,0 +1,30 @@
+[package]
+name = "text-to-cypher"
+version = "0.1.0"
+edition = "2024"
+authors = [
+  "c2fc2f <contact@c2fc2f.com>"
+]
+description = "A comparative study of two Neo4j query architectures: Direct Translation vs. Staged Translation (NL -> CNL/SQUALL/Sparklis -> Cypher)."
+readme = "README.md"
+repository = "https://github.com/c2fc2f/text-to-cypher"
+license = "MIT"
+keywords = [
+  "neo4j", 
+  "cypher", 
+  "nlp", 
+  "cnl", 
+  "squall",
+  "sparklis"
+]
+categories = [
+  "database", 
+  "parser-implementations"
+]
+
+[dependencies]
+mistralrs = { git = "https://github.com/EricLBuehler/mistral.rs" }
+tokio = { version = "1", features = ["full"] }
+anyhow = "1"
+serde = "1.0.228"
+serde_json = "1.0.149"
