@@ -60,6 +60,8 @@
                 rustfmt
                 clippy
 
+                rustPlatform.bindgenHook
+
                 pkg-config
               ];
 

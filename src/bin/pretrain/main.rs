@@ -26,7 +26,7 @@ RULES:
     - Output ONLY the Cypher query, nothing else.\
 ",
         )
-    .add_message(
+        .add_message(
         TextMessageRole::User,
         "\
 Node properties:
@@ -42,15 +42,15 @@ The node representing 'Inception' has elementId(node) = \"4:abc123:1\"
 Question:
 Find all directors of Inception\
 ",
-    )
-    .add_message(
+        )
+        .add_message(
         TextMessageRole::Assistant,
         "\
 MATCH (m:Movie) WHERE elementId(m) = \"4:abc123:1\"
 MATCH (p:Person)-[:DIRECTED]->(m)
 RETURN p.name\
 ",
-    )
+        )
         .add_message(
             TextMessageRole::User,
             "\

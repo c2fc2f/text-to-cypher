@@ -33,6 +33,8 @@ rustPlatform.buildRustPackage {
   nativeBuildInputs = [
     installShellFiles
     pkg-config
+
+    rustPlatform.bindgenHook
   ];
 
   buildInputs = [
