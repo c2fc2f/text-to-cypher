@@ -568,7 +568,7 @@ fn draw_files(frame: &mut Frame, area: Rect, app: &App) {
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
-pub(crate) fn run(args: SubArgs) -> anyhow::Result<()> {
+pub(crate) async fn run(args: SubArgs) -> anyhow::Result<()> {
     let dir: PathBuf = args.dir.canonicalize().unwrap_or(args.dir.clone());
     let dir_str: String = dir.to_string_lossy().into_owned();
     let stats: Stats =

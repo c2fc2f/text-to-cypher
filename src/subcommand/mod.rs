@@ -1,4 +1,4 @@
-pub mod dataset_gen;
+pub mod dataset;
 pub mod pretrain;
 pub mod stats;
 

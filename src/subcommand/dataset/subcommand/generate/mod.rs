@@ -1,6 +1,5 @@
 use std::{fs::File, io::Seek, path::PathBuf, sync::Arc, time::Duration};
 
-use super::Response;
 use anyhow::Result;
 use clap::Args;
 use futures::{StreamExt, stream};
@@ -17,6 +16,8 @@ use rig::{
 use serde::Deserialize;
 use serde_json::json;
 use tokio::sync::Mutex;
+
+use crate::subcommand::Response;
 
 #[derive(Args)]
 /// Generate a dataset of natural language queries and their Cypher requests

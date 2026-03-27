@@ -1,7 +1,6 @@
 use std::{ffi::OsStr, fs::File, path::PathBuf, time::Instant};
 
 use super::{Response, ValidationResult};
-use anyhow::Result;
 use clap::Args;
 use futures::{StreamExt, stream};
 use rig::{
@@ -35,7 +34,7 @@ pub(crate) struct SubArgs {
     generator: String,
 }
 
-pub(crate) async fn run(args: SubArgs) -> Result<()> {
+pub(crate) async fn run(args: SubArgs) -> anyhow::Result<()> {
     let prefix: &OsStr =
         args.dataset.file_stem().expect("The dataset is not a file");
 
