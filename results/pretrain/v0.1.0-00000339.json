@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {uuid: 123})-[:TAGGED]->(t:Tag {name: 'programming'}),\n    p2 = (q)-[:ASKED]->(u:User {uuid: 123})-[:PROVIDED]->(a:Answer {is_accepted: true}),\n    p3 = (q)-[:ANSWERED]->(a2:Answer {uuid: 456})-[:COMMENTED_ON]->(c:Comment {score: 5})\nRETURN p1, p2, p3",
+    "question": "How does the programming-focused question with answer ID 123 reflect the broader engagement trends among users like UUID 123, specifically in terms of accepted answers and high-scoring comments?"
+  },
+  "cypher": "MATCH (q:Question {link: 'programming-focused question with answer ID 123'})<-[:ASKED]-(u:User {uuid: 123})\\nOPTIONAL MATCH (u)-[:COMMENTED]->(c:Comment)<-[:COMMENTED_ON]-(q)\\nWITH q, COUNT(c) AS comment_count, COLLECT(c.score) AS comment_scores\\nRETURN q.title AS question_title, q.link AS question_link, comment_count, comment_scores"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {uuid: 12345})-[:TAGGED]->(t:Tag {name: 'programming'}),\n    p2 = (q)-[:ASKED]->(u:User {uuid: 12345}),\n    p3 = (q)-[:ANSWERED]->(a:Answer {uuid: 67890})\nRETURN p1, p2, p3",
+    "question": "How has the programming tag influenced the volume of accepted answers and engagement for the question asked by the user with ID 12345?"
+  },
+  "cypher": "MATCH (u:User {uuid: 12345})-[:ASKED]->(q:Question)-[:TAGGED]->(t:Tag)\\nWITH q, t\\nMATCH (q)-[:ANSWERED]->(a:Answer)<-[:PROVIDED]-(u)\\nWITH q, t, COUNT(a) AS acceptedAnswers, SUM(a.score) AS totalScore\\nRETURN q.title AS questionTitle, t.name AS tagName, acceptedAnswers, totalScore"
+}

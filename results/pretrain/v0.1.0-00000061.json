@@ -1,0 +1,9 @@
+{
+  "score": 0.5,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How does X work?'})-[r1:TAGGED]->(tag:Tag {name: 'ComputerScience'}),\n    p2 = (u:User {display_name: 'TechEnthusiast'})-[:ASKED]->q,\n    p3 = (q)-[:ANSWERED]->(a:Answer {is_accepted: TRUE})-[:PROVIDED]->(u)\nRETURN p1, p2, p3",
+    "question": "How did the accepted answer to TechEnthusiast’s question about *How does X work?* align with the ‘ComputerScience’ tag, and what key concepts did it emphasize?"
+  },
+  "cypher": "MATCH (q:Question {title: 'How does X work?'})<-[:ANSWERED]-(a:Answer)-[:TAGGED]->(t:Tag {name: 'ComputerScience'})\\nWITH q, a, t\\nRETURN q.title AS question, a.title AS accepted_answer, t.name AS tag, a.body_markdown AS key_concepts"
+}

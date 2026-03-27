@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nCharacter {centrality: FLOAT, book45PageRank: FLOAT, fastrf_embedding: LIST, book1BetweennessCentrality: FLOAT, book1PageRank: FLOAT, louvain: INTEGER, community: INTEGER, degree: FLOAT, name: STRING, pagerank: FLOAT}\nRelationship properties:\nINTERACTS {weight: INTEGER}\nINTERACTS1 {weight: INTEGER, book: INTEGER}\nINTERACTS2 {weight: INTEGER, book: INTEGER}\nINTERACTS3 {weight: INTEGER, book: INTEGER}\nINTERACTS45 {weight: INTEGER, book: INTEGER}\nThe relationships:\n(:Character)-[:INTERACTS45]->(:Character)\n(:Character)-[:INTERACTS]->(:Character)\n(:Character)-[:INTERACTS1]->(:Character)\n(:Character)-[:INTERACTS3]->(:Character)\n(:Character)-[:INTERACTS2]->(:Character)",
+    "cypher": "MATCH\n    p1 = (a:Character {name: 'Hamlet'})-[:INTERACTS45]->(b:Character {name: 'Ophelia'}),\n    p2 = (a)-[:INTERACTS]->(c:Character {name: 'Polonius'}),\n    p3 = (b)-[:INTERACTS2]->(d:Character {name: 'Claudius'})\nRETURN p1, p2, p3",
+    "question": "How do the interactions between Hamlet and Ophelia, as well as their broader dynamic in Act 45, compare to the indirect influence of Claudius through Ophelia’s relationships in earlier scenes?"
+  },
+  "cypher": "MATCH (hamlet:Character {name: 'Hamlet'}), (ophelia:Character {name: 'Ophelia'}), (claudius:Character {name: 'Claudius'})\\nWHERE hamlet.book45PageRank IS NOT NULL AND ophelia.book45PageRank IS NOT NULL AND claudius.book45PageRank IS NOT NULL\\nWITH hamlet, ophelia, claudius,       hamlet.book45PageRank AS hamlet_pageRank,       ophelia.book45PageRank AS ophelia_pageRank,       claudius.book45PageRank AS claudius_pageRank\\nRETURN [(hamlet)-[r1:INTERACTS45]->(ophelia), (claudius)-[r2:INTERACTS2]->(ophelia) | r1, r2], hamlet_pageRank, ophelia_pageRank, claudius_pageRank"
+}

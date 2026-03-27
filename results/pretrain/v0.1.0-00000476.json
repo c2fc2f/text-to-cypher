@@ -1,0 +1,9 @@
+{
+  "score": 0.5,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How do I install Neo4j?'})-[r1:TAGGED]->(t:Tag {name: 'Software'}),\n    p2 = (q)-[r2:ASKED]->(u:User {display_name: 'TechExplorer'}),\n    p3 = (q)-[r3:ANSWERED]->(a:Answer {title: 'Use the official installer'})-[r4:ANSWERED]->(q2:Question {title: 'Best practice for database setup'})\nRETURN p1, p2, p3",
+    "question": "How did the user \"TechExplorer\" answer the question about Neo4j installation, and which follow-up question did they reference for best practices in database setup?"
+  },
+  "cypher": "MATCH (u:User {display_name: 'TechExplorer'})-[:ASKED]->(q:Question)-[:ANSWERED]->(a:Answer)-[:ANSWERED]->(f:Question)\\nWHERE q.title CONTAINS 'Neo4j installation' AND f.title CONTAINS 'database setup'\\nRETURN q, a, f"
+}

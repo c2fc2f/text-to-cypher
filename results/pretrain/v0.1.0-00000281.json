@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nCharacter {centrality: FLOAT, book45PageRank: FLOAT, fastrf_embedding: LIST, book1BetweennessCentrality: FLOAT, book1PageRank: FLOAT, louvain: INTEGER, community: INTEGER, degree: FLOAT, name: STRING, pagerank: FLOAT}\nRelationship properties:\nINTERACTS {weight: INTEGER}\nINTERACTS1 {weight: INTEGER, book: INTEGER}\nINTERACTS2 {weight: INTEGER, book: INTEGER}\nINTERACTS3 {weight: INTEGER, book: INTEGER}\nINTERACTS45 {weight: INTEGER, book: INTEGER}\nThe relationships:\n(:Character)-[:INTERACTS45]->(:Character)\n(:Character)-[:INTERACTS]->(:Character)\n(:Character)-[:INTERACTS1]->(:Character)\n(:Character)-[:INTERACTS3]->(:Character)\n(:Character)-[:INTERACTS2]->(:Character)",
+    "cypher": "MATCH\n    p1 = (a:Character {name: 'Hermione Granger'})-[r1:INTERACTS45]->(b:Character),\n    p2 = (a)-[r2:INTERACTS]->(c:Character {name: 'Ron Weasley'}),\n    p3 = (b)-[r3:INTERACTS2]->(d:Character {name: 'Albus Dumbledore'})\nRETURN p1, p2, p3",
+    "question": "How does Hermione Granger’s most recent collaborative dynamic with Albus Dumbledore compare to her recurring interactions with Ron Weasley, specifically in terms of their shared intellectual weight across the books?"
+  },
+  "cypher": "MATCH (hermione:Character {name: \"Hermione Granger\"}), (albus:Character {name: \"Albus Dumbledore\"}), (ron:Character {name: \"Ron Weasley\"})\\nMATCH (hermione)-[hermione_albus_interaction:INTERACTS45]->(albus)\\nMATCH (hermione)-[hermione_ron_interaction:INTERACTS1]->(ron)\\nRETURN hermione_albus_interaction.weight AS HermioneAlbusInteractionWeight, hermione_ron_interaction.weight AS HermioneRonInteractionWeight"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nCharacter {centrality: FLOAT, book45PageRank: FLOAT, fastrf_embedding: LIST, book1BetweennessCentrality: FLOAT, book1PageRank: FLOAT, louvain: INTEGER, community: INTEGER, degree: FLOAT, name: STRING, pagerank: FLOAT}\nRelationship properties:\nINTERACTS {weight: INTEGER}\nINTERACTS1 {weight: INTEGER, book: INTEGER}\nINTERACTS2 {weight: INTEGER, book: INTEGER}\nINTERACTS3 {weight: INTEGER, book: INTEGER}\nINTERACTS45 {weight: INTEGER, book: INTEGER}\nThe relationships:\n(:Character)-[:INTERACTS45]->(:Character)\n(:Character)-[:INTERACTS]->(:Character)\n(:Character)-[:INTERACTS1]->(:Character)\n(:Character)-[:INTERACTS3]->(:Character)\n(:Character)-[:INTERACTS2]->(:Character)",
+    "cypher": "MATCH\n    p1 = (a:Character {name: 'Hamlet'}),\n    p2 = (a)-[r1:INTERACTS]->(b:Character {name: 'Ophelia'}),\n    p3 = (b)-[r2:INTERACTS45]->(c:Character {name: 'Polonius'}),\n    p4 = (a)-[r3:INTERACTS3]->(d:Character {name: 'Claudius'}),\n    p5 = (d)-[r4:INTERACTS2]->(e:Character {name: 'Goneril'}),\n    p6 = (a)-[r5:INTERACTS1]->(f:Character {name: 'Fortinbras'}) WITH\n    p1, p2, p3, p4, p5, p6 AS paths\nWHERE\n    size([x IN paths WHERE x[0] = a]) > 1\nRETURN\n    p1, p2, p4, p6;",
+    "question": "How does Hamlet’s centrality in multiple literary interactions compare with his direct influence on Fortinbras and Claudius, given his recurring role across these relationships?"
+  },
+  "cypher": "MATCH (h:Character {name: 'Hamlet'})-[r:INTERACTS|INTERACTS1|INTERACTS2|INTERACTS3|INTERACTS45]->(f:Character {name: 'Fortinbras'})| (h)-[:INTERACTS|INTERACTS1|INTERACTS2|INTERACTS3|INTERACTS45]->(c:Character {name: 'Claudius'})\\nWITH h, SUM(r.weight) AS totalWeight, COUNT(r) AS totalRelationships\\nRETURN h.name AS Hamlet, totalWeight, totalRelationships"
+}

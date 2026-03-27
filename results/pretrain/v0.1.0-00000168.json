@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:ANSWERED]->(a:Answer {title: 'Correct Cypher syntax'})-[:COMMENTED_ON]->(q2:Question),\n    p2 = (u:User {display_name: 'Neo4j Expert'})-[r2:ASKED]->(q),\n    p3 = (u)-[r3:PROVIDED]->(a),\n    p4 = (t:Tag {name: 'cypher'})-[r4:TAGGED]->(q),\n    p5 = (a)-[r5:COMMENTED_ON]->(c:Comment {score: 50})-[r6:COMMENTED_ON]->(q3:Question)\nRETURN p1, p2, p3, p4, p5",
+    "question": "How does the accepted answer for \"How to build a Cypher query?\" compare to the comments from the user Neo4j Expert on related questions, particularly those tagged with \"cypher\"?"
+  },
+  "cypher": "MATCH (q:Question {title: \"How to build a Cypher query?\"}) -[:ANSWERED]->(a:Answer {is_accepted: true}),       (u:User {display_name: \"Neo4j Expert\"})-[:ASKED]->(oq:Question)-[:TAGGED]->(t:Tag {name: \"cypher\"}),       (u)-[:COMMENTED]->(c:Comment)-[:COMMENTED_ON]->(oq)\\nRETURN a, c"
+}

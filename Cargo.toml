@@ -22,8 +22,11 @@ categories = [
   "parser-implementations"
 ]
 
+[[bin]]
+name = "t2c"
+path = "src/main.rs"
+
 [dependencies]
-mistralrs = { git = "https://github.com/EricLBuehler/mistral.rs" }
 tokio = { version = "1", features = ["full"] }
 anyhow = "1"
 serde = { version = "1", features = ["derive"] }
@@ -33,3 +36,5 @@ rig-core = "0.33"
 rand = "0.10"
 futures = "0.3"
 indicatif = "0.18"
+ratatui = "0.30"
+crossterm = "=0.29"

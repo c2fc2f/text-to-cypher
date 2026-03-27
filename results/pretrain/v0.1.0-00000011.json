@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nCharacter {centrality: FLOAT, book45PageRank: FLOAT, fastrf_embedding: LIST, book1BetweennessCentrality: FLOAT, book1PageRank: FLOAT, louvain: INTEGER, community: INTEGER, degree: FLOAT, name: STRING, pagerank: FLOAT}\nRelationship properties:\nINTERACTS {weight: INTEGER}\nINTERACTS1 {weight: INTEGER, book: INTEGER}\nINTERACTS2 {weight: INTEGER, book: INTEGER}\nINTERACTS3 {weight: INTEGER, book: INTEGER}\nINTERACTS45 {weight: INTEGER, book: INTEGER}\nThe relationships:\n(:Character)-[:INTERACTS45]->(:Character)\n(:Character)-[:INTERACTS]->(:Character)\n(:Character)-[:INTERACTS1]->(:Character)\n(:Character)-[:INTERACTS3]->(:Character)\n(:Character)-[:INTERACTS2]->(:Character)",
+    "cypher": "MATCH\n    p1 = (a:Character {name: 'Hamlet'})-[r1:INTERACTS]->(b:Character),\n    p2 = (a)-[r2:INTERACTS45]->(c:Character {name: 'Iago'}),\n    p3 = (b)-[r3:INTERACTS1 {book: 45}]->(d:Character {name: 'Ophelia'})\nRETURN p1, p2, p3",
+    "question": "How does Hamlet’s centrality in *Hamlet* (book 45) compare to Iago’s influence within the same play, and which characters in book 45 does Hamlet directly engage with most frequently?"
+  },
+  "cypher": "MATCH (h:Character {name: \"Hamlet\", book45PageRank: 1.0})-[:INTERACTS45]->(other)\\nRETURN h.centrality, other.centrality, h.name, other.name"
+}

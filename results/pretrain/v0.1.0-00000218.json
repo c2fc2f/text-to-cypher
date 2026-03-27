@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (actor:Person {name: 'Martin Scorsese'})-[:ACTED_IN]->(movie1:Movie {title: 'Taxi Driver'}), p2 = (actor)-[:DIRECTED]->(movie2:Movie {title: 'Raging Bull'}), p3 = (movie1)-[:REVIEWED]->(review:REVIEWED {summary: 'A darkly comedic take on Scorsese's own life'})\nRETURN p1, p2, p3",
+    "question": "How does Martin Scorsese’s critical reception of *Taxi Driver*—as reflected in the review cited for that film—compare to the broader influence of his directorial work, particularly *Raging Bull*, on his public image and career trajectory?"
+  },
+  "cypher": "MATCH (p:Person {name: 'Martin Scorsese'})-[:DIRECTED]->(m:Movie {title: 'Taxi Driver'})\\nMATCH (p)-[:DIRECTED]->(m2:Movie {title: 'Raging Bull'})\\nMATCH (p)-[r:REVIEWED]->(m)\\nRETURN \\n    p,        m,        r,        m2,        p,        m2"
+}

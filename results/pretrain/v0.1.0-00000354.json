@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (director:Person {name: 'Christopher Nolan'})-[r1:DIRECTED]->(movie1:Movie {title: 'Inception'}),\n\n    p2 = (director)-[r2:ACTED_IN]->(actor1:Person {name: 'Leonardo DiCaprio'}),\n    p3 = (actor1)-[r3:REVIEWED]->(movie2:Movie {title: 'Dune'}),\n\n    p4 = (movie1)-[r4:REVIEWED]->(reviewer:Person {name: 'Tom Cruise'}),\n\n    p5 = (director)-[r5:FOLLOWS]->(actor2:Person {name: 'Robert Downey Jr'})\n\nRETURN p1, p2, p3, p4, p5",
+    "question": "How does the creative dynamic between Christopher Nolan and Leonardo DiCaprio influence the reception of *Inception*, and which films by Leonardo has Tom Cruise most critically praised?"
+  },
+  "cypher": "MATCH (p1:Person {name: 'Christopher Nolan'})-[:DIRECTED]->(m:Movie {title: 'Inception'})\\nMATCH (p2:Person {name: 'Leonardo DiCaprio'})-[:ACTED_IN]->(m)\\nMATCH (p2)-[:REVIEWED]->(r:Movie)\\nWITH p2, collect(r) AS leoReviews, collect(r.rating) AS leoRatings\\nORDER BY leoRatings DESC\\nLIMIT 1\\nMATCH (p2)-[:ACTED_IN]->(m2:Movie)\\nWITH p2, m2\\nORDER BY leoRatings DESC\\nLIMIT 1\\nRETURN p2.name AS actor, m2.title AS movie"
+}

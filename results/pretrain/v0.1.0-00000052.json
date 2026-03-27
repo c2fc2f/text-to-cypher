@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Martin Scorsese'})-[r1:ACTED_IN]->(b:Movie {title: 'Taxi Driver'}),\n    p2 = (a)-[r2:DIRECTED]->(c:Movie {title: 'Taxi Driver'}),\n    p3 = (b)-[r3:REVIEWED]->(d:Movie {title: 'Taxi Driver', tagline: 'You talkin' to me?'})\nRETURN p1, p2, p3",
+    "question": "How does Martin Scorsese’s directorial influence on *Taxi Driver* compare with his own acting role in the film, particularly given his detailed review of the movie’s tone and character dynamics?"
+  },
+  "cypher": "MATCH (martin:Person {name: 'Martin Scorsese'})-[:DIRECTED]->(taxi:Movie {title: 'Taxi Driver'})\\nMATCH (martin)-[:REVIEWED]->(taxi)\\nRETURN taxi.title AS movie,       taxi.released AS release_year,       taxi.tagline AS tagline,       taxi.votes AS votes,       martin.name AS director,       martin.born AS birth_year,       martin.name AS reviewer,       martin.born AS reviewer_birth_year"
+}

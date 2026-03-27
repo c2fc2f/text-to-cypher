@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\n- **User**\n  - `label`: STRING Example: \"inchristbl.bsky.social\"\n  - `key`: STRING Example: \"0\"\n  - `y`: FLOAT Example: \"6000.659\"\n  - `color`: STRING Example: \"#3CB371\"\n  - `x`: FLOAT Example: \"-4383.217\"\n  - `area`: FLOAT Example: \"2.6\"\n  - `size`: FLOAT Example: \"1.82\"\nRelationship properties:\n- **INTERACTED**\n  - `weight: INTEGER` Example: \"1\"\n  - `ogWeight: INTEGER` Example: \"1\"\n  - `size: FLOAT` Example: \"0.2\"\n  - `key: STRING` Example: \"geid_68_0\"\nThe relationships:\n(:User)-[:INTERACTED]->(:User)",
+    "cypher": "MATCH\n    p1 = (a:User {key: '0'})-[r1:INTERACTED {key: 'geid_68_0', ogWeight: 1}]->(b:User),\n    p2 = (a)-[r2:INTERACTED {weight: 1, size: 0.2}]->(c:User),\n    p3 = (b)-[r3:INTERACTED]->(d:User)\nWHERE size(a) > 2.0 AND y(a) > 5000\nRETURN p1, p2, p3",
+    "question": "What is the most prominent user interaction pattern involving the node labeled \"0\" where users with a size greater than 2.0 and a y-coordinate above 5000 engage, and how does the weight of their interactions compare to those of nearby users?"
+  },
+  "cypher": "MATCH (start:User {label: '0'})-[r]->(user1:User)\\nWHERE user1.size > 2.0 AND user1.y > 5000\\nWITH r, user1\\nMATCH (user1)-[r2]->(user2:User)\\nWITH r, r2, user1, user2\\nRETURN r, r2, user1, user2, abs(weight(r) - weight(r2)) AS weight_diff\\nORDER BY weight_diff ASC\\nLIMIT 1"
+}

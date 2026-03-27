@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\n- **User**\n  - `label`: STRING Example: \"inchristbl.bsky.social\"\n  - `key`: STRING Example: \"0\"\n  - `y`: FLOAT Example: \"6000.659\"\n  - `color`: STRING Example: \"#3CB371\"\n  - `x`: FLOAT Example: \"-4383.217\"\n  - `area`: FLOAT Example: \"2.6\"\n  - `size`: FLOAT Example: \"1.82\"\nRelationship properties:\n- **INTERACTED**\n  - `weight: INTEGER` Example: \"1\"\n  - `ogWeight: INTEGER` Example: \"1\"\n  - `size: FLOAT` Example: \"0.2\"\n  - `key: STRING` Example: \"geid_68_0\"\nThe relationships:\n(:User)-[:INTERACTED]->(:User)",
+    "cypher": "MATCH\n    p1 = (a:User {key: \"0\"})-[r1:INTERACTED {key: \"geid_68_0\"}]->(b:User),\n    p2 = (a)-[r2:INTERACTED {ogWeight: 1}]->(c:User {color: \"#3CB371\"}),\n    p3 = (b)-[r3:INTERACTED {size: 1.82}]->(d:User {y: 6000.659})\nRETURN p1, p2, p3",
+    "question": "How does the user with key \"0\" engage differently with users whose profiles share the same green color in their interactions, compared to those whose y-coordinate aligns with the average activity level of users they’ve previously interacted with of size 1.82?"
+  },
+  "cypher": "MATCH (u1:User {key: '0'})-[r]->(u2:User)\\nWHERE u1.color = u2.color\\nWITH u1, r, u2\\nMATCH (u1)-[:INTERACTED]->(u3:User {size: 1.82})\\nWITH u1, r, u2, avg(u3.y) AS avg_y\\nWHERE u2.y = avg_y\\nRETURN DISTINCT path((u1)-[r*]->(u2)) AS path1, path((u1)-[r]->(u2)) - path1 AS path2"
+}

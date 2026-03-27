@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\n- **User**\n  - `label`: STRING Example: \"inchristbl.bsky.social\"\n  - `key`: STRING Example: \"0\"\n  - `y`: FLOAT Example: \"6000.659\"\n  - `color`: STRING Example: \"#3CB371\"\n  - `x`: FLOAT Example: \"-4383.217\"\n  - `area`: FLOAT Example: \"2.6\"\n  - `size`: FLOAT Example: \"1.82\"\nRelationship properties:\n- **INTERACTED**\n  - `weight: INTEGER` Example: \"1\"\n  - `ogWeight: INTEGER` Example: \"1\"\n  - `size: FLOAT` Example: \"0.2\"\n  - `key: STRING` Example: \"geid_68_0\"\nThe relationships:\n(:User)-[:INTERACTED]->(:User)",
+    "cypher": "MATCH\n    p1 = (a:User {label: 'inchristbl.bsky.social'})-[r1:INTERACTED {key: 'geid_68_0'}]->(b:User),\n    p2 = (a)-[r2:INTERACTED {ogWeight: 1}]->(c:User {color: '#3CB371'}),\n    p3 = (b)-[r3:INTERACTED]->(d:User {size: 1.82})\nRETURN p1, p2, p3",
+    "question": "What is the engagement pattern between inchristbl.bsky.social and the user with green (#3CB371) profile color, specifically focusing on how frequently they interact with profiles that share similar visual attributes like a size of 1.82?"
+  },
+  "cypher": "MATCH (u1:User {label: 'inchristbl.bsky.social'}), (u2:User {color: '#3CB371', size: 1.82})\\nMATCH p=(u1)-[:INTERACTED]->(u2)\\nRETURN p"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (actor:Person {name: 'Tom Hanks'})-[r1:ACTED_IN]->(movie:Movie {title: 'Forrest Gump'}),\n    p2 = (actor)-[r2:DIRECTED]->(movie2:Movie {released: 1994}),\n    p3 = (movie)-[r3:REVIEWED]->(review:Movie {tagline: 'Life is like a box of chocolates...'})\nRETURN p1, p2, p3",
+    "question": "How does the 1994 release of a film directed by Tom Hanks compare to his acting roles in it, given his audience reviews reflect on its iconic tagline?"
+  },
+  "cypher": "MATCH (tom:Person {name: \"Tom Hanks\"})-[:DIRECTED]->(m:Movie {released: 1994})\\nWITH m\\nMATCH (tom)-[:ACTED_IN]->(m)<-[:REVIEWED]-(r:Person)\\nRETURN m.title AS movie, tom.name AS director, collect(r.rating) AS ratings, m.tagline AS tagline"
+}

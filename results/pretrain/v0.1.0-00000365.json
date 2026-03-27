@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to query Neo4j'})-[:TAGGED]->(t:Tag {name: 'neo4j'})-[r1:ANSWERED]->(a:Answer {title: 'Best Cypher Patterns'}),\n    p2 = (u:User {uuid: 12345})-[:ASKED]->(q),\n    p3 = (a)-[:PROVIDED]->(u)-[:COMMENTED]->(c:Comment {score: 5})-[r2:COMMENTED_ON]->(q)-[:TAGGED]->(t2:Tag {name: 'tutorial'})\nRETURN p1, p2, p3",
+    "question": "How did the user with UUID 12345 initially respond to the 'neo4j' tutorial question on query patterns, and what score did they assign to their subsequent comment on the accepted answer?"
+  },
+  "cypher": "MATCH (u:User {uuid: 12345})-[:ASKED]->(q:Question {title: 'neo4j tutorial question on query patterns'})\\nMATCH (u)-[:COMMENTED]->(c:Comment)-[:COMMENTED_ON]->(q)<-[:PROVIDED]-(a:Answer)\\nRETURN u.display_name AS user, a.title AS acceptedAnswerTitle, a.score AS acceptedAnswerScore"
+}

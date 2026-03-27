@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:TAGGED]->(tag:Tag {name: 'cypher'}),\n    p2 = (u:User {uuid: 12345})-[r2:ASKED]->(q),\n    p3 = (q)-[r3:ANSWERED]->(a:Answer {title: 'Best practices for Cypher'})-[r4:PROVIDED]->(u)\nRETURN p1, p2, p3",
+    "question": "What impact does the tag \"cypher\" have on the engagement metrics of the question \"How to build a Cypher query,\" specifically in terms of answer acceptance rates and view counts for users with the UUID 12345?"
+  },
+  "cypher": "MATCH (u:User {uuid: 12345})-[:ASKED]->(q:Question {title: \"How to build a Cypher query\"})\\nMATCH (q)-[:TAGGED]->(t:Tag {name: \"cypher\"})\\nRETURN q.view_count, q.answer_count, q.is_accepted"
+}

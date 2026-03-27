@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:TAGGED]->(tag1:Tag {name: 'cypher'}),\n    p2 = (q)-[r2:ASKED]->(u:User),\n    p3 = (u)-[r3:PROVIDED]->(a:Answer {title: 'Best practices for Cypher queries'}),\n    p4 = (a)-[r4:ANSWERED]->(q2:Question {uuid: q.uuid + 1})\nRETURN\n    p1, p2, p3, p4\nWHERE q.uuid = 12345 AND tag1.link = 'https://example.com/cypher-tags'",
+    "question": "How does the accepted answer to question 12345, titled \"How to build a Cypher query?\", relate to the follow-up question \"Best practices for Cypher queries,\" and which tags were used in the original query?"
+  },
+  "cypher": "MATCH (q1:Question {title: \"How to build a Cypher query?\"})-[:ANSWERED]->(a1:Answer {link: \"12345\"}),       (q2:Question {title: \"Best practices for Cypher queries\"}),       (q1)-[:TAGGED]->(t:Tag)\\nRETURN a1, q2, collect(t.name) AS Tags"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\n- **User**\n  - `label`: STRING Example: \"inchristbl.bsky.social\"\n  - `key`: STRING Example: \"0\"\n  - `y`: FLOAT Example: \"6000.659\"\n  - `color`: STRING Example: \"#3CB371\"\n  - `x`: FLOAT Example: \"-4383.217\"\n  - `area`: FLOAT Example: \"2.6\"\n  - `size`: FLOAT Example: \"1.82\"\nRelationship properties:\n- **INTERACTED**\n  - `weight: INTEGER` Example: \"1\"\n  - `ogWeight: INTEGER` Example: \"1\"\n  - `size: FLOAT` Example: \"0.2\"\n  - `key: STRING` Example: \"geid_68_0\"\nThe relationships:\n(:User)-[:INTERACTED]->(:User)",
+    "cypher": "MATCH\n    p1 = (a:User {label: 'inchristbl.bsky.social', key: '0'}),\n    p2 = (a)-[r2:INTERACTED {key: 'geid_68_0', size: 0.2}]->(b:User),\n    p3 = (b)-[r3:INTERACTED]->(c:User)\nRETURN p1, p2, p3",
+    "question": "How does the engagement size of interactions between inchristbl.bsky.social and their second-degree connections vary across different levels of influence in the platform?"
+  },
+  "cypher": "MATCH (u1:User {label: 'inchristbl.bsky.social'})-[:INTERACTED]->(c:User)<-[:INTERACTED]-(u2:User)\\nWITH u1, c, u2, [(u1)-[:INTERACTED]->(c) | [(c)-[:INTERACTED]->(u2) | u1, c, u2]] AS paths\\nUNWIND paths AS path\\nWITH path[1] AS user1, path[2] AS user2, path[3] AS user3\\nRETURN DISTINCT user3.label AS targetUser"
+}

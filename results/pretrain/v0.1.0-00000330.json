@@ -1,0 +1,9 @@
+{
+  "score": 0.5,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Martin Scorsese'})-[r1:ACTED_IN]->(b:Movie {title: 'Taxi Driver'}),\n\n    p2 = (a)-[r2:DIRECTED]->(c:Movie {title: 'Taxi Driver'}),\n\n    p3 = (b)-[r3:REVIEWED]->(d:Movie {title: 'Taxi Driver', tagline: 'You talkin’ to me?'})\nRETURN p1, p2, p3",
+    "question": "How does Martin Scorsese’s directorial and acting roles in *Taxi Driver* influence the critical reception, as reflected in the review summary and rating for the film?"
+  },
+  "cypher": "MATCH (p:Person {name: \"Martin Scorsese\"})-[:DIRECTED]->(m:Movie {title: \"Taxi Driver\"})\\nMATCH (p)-[:ACTED_IN]->(m)<-[:REVIEWED]-(r:Person)-[:REVIEWED]->(m)\\nRETURN p, m, r, m.title AS movie, r.summary AS review_summary, r.rating AS review_rating"
+}

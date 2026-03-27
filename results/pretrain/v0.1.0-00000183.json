@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\n- **Movie**\n  - `title`: STRING Example: \"The Matrix\"\n  - `votes`: INTEGER Min: 1, Max: 5259\n  - `tagline`: STRING Example: \"Welcome to the Real World\"\n  - `released`: INTEGER Min: 1975, Max: 2012\n- **Person**\n  - `born`: INTEGER Min: 1929, Max: 1996\n  - `name`: STRING Example: \"Keanu Reeves\"\nRelationship properties:\n- **ACTED_IN**\n  - `roles: LIST` Min Size: 1, Max Size: 6\n- **REVIEWED**\n  - `summary: STRING` Available options: ['Pretty funny at times', 'A solid romp', 'Silly, but fun', 'You had me at Jerry', 'An amazing journey', 'Slapstick redeemed only by the Robin Williams and ', 'Dark, but compelling', 'The coolest football movie ever', 'Fun, but a little far fetched']\n  - `rating: INTEGER` Min: 45, Max:  100\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Keanu Reeves'})-[r1:ACTED_IN]->(b:Movie {title: 'The Matrix'}),\n    p2 = (a)-[r2:DIRECTED]->(c:Movie {title: 'The Matrix'}),\n    p3 = (b)-[r3:REVIEWED]->(d:Movie {title: 'The Matrix'})\nRETURN p1, p2, p3",
+    "question": "How did Keanu Reeves’ performance in *The Matrix* influence its critical reception, and what themes did audiences and critics highlight in their reviews?"
+  },
+  "cypher": "MATCH (p:Person {name: \"Keanu Reeves\"})-[:ACTED_IN {roles: ['Neo']}]->(m:Movie {title: \"The Matrix\"})\\nWITH m\\nMATCH (p)-[r:REVIEWED]-(m)\\nRETURN r.summary AS critic_summary, r.rating AS critic_rating, r.themes AS critic_themes"
+}

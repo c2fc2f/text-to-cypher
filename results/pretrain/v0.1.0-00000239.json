@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nCharacter {centrality: FLOAT, book45PageRank: FLOAT, fastrf_embedding: LIST, book1BetweennessCentrality: FLOAT, book1PageRank: FLOAT, louvain: INTEGER, community: INTEGER, degree: FLOAT, name: STRING, pagerank: FLOAT}\nRelationship properties:\nINTERACTS {weight: INTEGER}\nINTERACTS1 {weight: INTEGER, book: INTEGER}\nINTERACTS2 {weight: INTEGER, book: INTEGER}\nINTERACTS3 {weight: INTEGER, book: INTEGER}\nINTERACTS45 {weight: INTEGER, book: INTEGER}\nThe relationships:\n(:Character)-[:INTERACTS45]->(:Character)\n(:Character)-[:INTERACTS]->(:Character)\n(:Character)-[:INTERACTS1]->(:Character)\n(:Character)-[:INTERACTS3]->(:Character)\n(:Character)-[:INTERACTS2]->(:Character)",
+    "cypher": "MATCH\n    p1 = (a:Character {name: 'Hamlet'})-[:INTERACTS45]->(b:Character),\n    p2 = (a)-[:INTERACTS1 {book: 45}]->(c:Character {name: 'Iago'}),\n    p3 = (b)-[:INTERACTS]->(d:Character {name: 'Ophelia'})\nRETURN p1, p2, p3",
+    "question": "How does Hamlet’s central role in *Hamlet Act 45* compare to his interactions with Iago, and what broader dynamics emerge between those relationships and Ophelia’s character in the same play?"
+  },
+  "cypher": "MATCH (hamlet:Character {name: \"Hamlet\"}), (iago:Character {name: \"Iago\"}), (ophelia:Character {name: \"Ophelia\"})\\nWHERE hamlet.book45PageRank IS NOT NULL\\nWITH hamlet, iago, ophelia, hamlet.book45PageRank AS hamlet_pagerank, iago.book45PageRank AS iago_pagerank, ophelia.book45PageRank AS ophelia_pagerank\\nRETURN hamlet_pagerank, iago_pagerank, ophelia_pagerank"
+}

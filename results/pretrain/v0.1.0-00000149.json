@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nCharacter {centrality: FLOAT, book45PageRank: FLOAT, fastrf_embedding: LIST, book1BetweennessCentrality: FLOAT, book1PageRank: FLOAT, louvain: INTEGER, community: INTEGER, degree: FLOAT, name: STRING, pagerank: FLOAT}\nRelationship properties:\nINTERACTS {weight: INTEGER}\nINTERACTS1 {weight: INTEGER, book: INTEGER}\nINTERACTS2 {weight: INTEGER, book: INTEGER}\nINTERACTS3 {weight: INTEGER, book: INTEGER}\nINTERACTS45 {weight: INTEGER, book: INTEGER}\nThe relationships:\n(:Character)-[:INTERACTS45]->(:Character)\n(:Character)-[:INTERACTS]->(:Character)\n(:Character)-[:INTERACTS1]->(:Character)\n(:Character)-[:INTERACTS3]->(:Character)\n(:Character)-[:INTERACTS2]->(:Character)",
+    "cypher": "MATCH\n    p1 = (a:Character {name: 'Hamlet'}),\n    p2 = (a)-[r1:INTERACTS]->(b:Character),\n    p3 = (b)-[r2:INTERACTS45]->(c:Character {name: 'Ophelia'}),\n    p4 = (a)-[r3:INTERACTS3]->(d:Character {name: 'Polonius'})\nRETURN p1, p2, p3, p4",
+    "question": "How does the dynamic weight of Hamlet’s interactions with Ophelia differ from his recurring roles in the same play as Polonius, and what role does this interplay suggest about their thematic significance in *Hamlet*?"
+  },
+  "cypher": "MATCH (hamlet:Character {name: 'Hamlet'}), (ophelia:Character {name: 'Ophelia'}), (polonius:Character {name: 'Polonius'})\\nWHERE hamlet.name = 'Hamlet' AND ophelia.name = 'Ophelia' AND polonius.name = 'Polonius'\\nMATCH (hamlet)-[h:INTERACTS45]->(ophelia), (hamlet)-[p:INTERACTS1]->(polonius)\\nRETURN h.weight AS Hamlet_Ophelia_InteractionWeight, p.weight AS Hamlet_Polonius_InteractionWeight"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Martin Scorsese'})-[r1:ACTED_IN {roles: ['Director']}]->(b:Movie {title: 'Taxi Driver'}),\n    p2 = (a)-[r2:DIRECTED]->(c:Movie {title: 'Taxi Driver'}),\n    p3 = (b)-[r3:REVIEWED]->(d:Movie {title: 'Taxi Driver', votes: 1000000, tagline: 'A man becomes a hero'})\nRETURN p1, p2, p3",
+    "question": "What is the critical role of Martin Scorsese’s directorial involvement in *Taxi Driver*, and how does his subsequent review reflect the film’s broader cultural impact compared to his acting credits?"
+  },
+  "cypher": "MATCH (p:Person {name: 'Martin Scorsese'})-[:DIRECTED]->(m:Movie {title: 'Taxi Driver'})\\nMATCH (p)-[a:ACTED_IN]->(m)<-[r:REVIEWED]-(reviewer:Person)\\nRETURN a.roles AS directingRole, r.summary AS reviewSummary\\nORDER BY m.released DESC"
+}

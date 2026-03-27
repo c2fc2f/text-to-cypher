@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\n- **User**\n  - `label`: STRING Example: \"inchristbl.bsky.social\"\n  - `key`: STRING Example: \"0\"\n  - `y`: FLOAT Example: \"6000.659\"\n  - `color`: STRING Example: \"#3CB371\"\n  - `x`: FLOAT Example: \"-4383.217\"\n  - `area`: FLOAT Example: \"2.6\"\n  - `size`: FLOAT Example: \"1.82\"\nRelationship properties:\n- **INTERACTED**\n  - `weight: INTEGER` Example: \"1\"\n  - `ogWeight: INTEGER` Example: \"1\"\n  - `size: FLOAT` Example: \"0.2\"\n  - `key: STRING` Example: \"geid_68_0\"\nThe relationships:\n(:User)-[:INTERACTED]->(:User)",
+    "cypher": "MATCH\n    p1 = (a:User {key: \"0\"})-[r1:INTERACTED]->(b:User),\n    p2 = (a)-[r2:INTERACTED {key: \"geid_68_0\", size: 0.2}]->(c:User {key: \"1\"}),\n    p3 = (b)-[r3:INTERACTED]->(d:User {key: \"2\"})\nRETURN p1, p2, p3",
+    "question": "How does the interaction between user \"0\" and the user identified by \"1\" through the relationship \"geid_68_0\" compare in terms of engagement metrics like weight and size with other interactions involving \"0\"?"
+  },
+  "cypher": "MATCH (u1:User {key: '0'})-[r:INTERACTED]->(u2:User {key: '1'})\\nWHERE r.key = 'geid_68_0'\\nWITH u1, r, u2\\nOPTIONAL MATCH (u1)-[r1:INTERACTED]->(u)\\nWHERE u <> u2\\nWITH u1, r, u2, r1, count(DISTINCT u) AS interactionCount\\nRETURN u1.label AS User0, u2.label AS User1, r.weight AS Weight, r.size AS Size, interactionCount\\nORDER BY interactionCount DESC"
+}

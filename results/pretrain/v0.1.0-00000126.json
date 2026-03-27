@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:TAGGED]->(t:Tag {name: 'cypher'}),\n    p2 = (q)-[r2:ASKED]->(u:User {display_name: 'Neo4jAdmin'}),\n    p3 = (u)-[r3:PROVIDED]->(a:Answer {title: 'Correct Cypher syntax'})-[r4:ANSWERED]->(q2:Question {title: 'How to validate Cypher queries?'})\nRETURN p1, p2, p3",
+    "question": "How does the answer titled \"Correct Cypher syntax\" provided by Neo4jAdmin directly address the follow-up question about validating Cypher queries, and what specific tags from the original question does it incorporate?"
+  },
+  "cypher": "MATCH (a:Answer {title: 'Correct Cypher syntax'})-[:ANSWERED]->(q:Question)<-[:ASKED]-(u:User)-[:COMMENTED]->(c:Comment)\\nMATCH (q)-[:TAGGED]->(t:Tag)\\nRETURN a, q, t"
+}

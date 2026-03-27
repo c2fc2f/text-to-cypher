@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a 360-degree view in Neo4j?'})-[r1:TAGGED]->(t:Tag {name: 'neojp'}),\n    p2 = (u:User {uuid: 12345})-[r2:ASKED]->(q),\n    p3 = (q)-[r3:ANSWERED]->(a:Answer {is_accepted: true})\nRETURN p1, p2, p3",
+    "question": "How does the accepted answer to the question about building a 360-degree view in Neo4j relate to the tag \"neojp\" and which users have contributed most significantly to discussions around it?"
+  },
+  "cypher": "MATCH (q:Question {title: \"building a 360-degree view in Neo4j\"})<-[:ANSWERED]-(a:Answer {is_accepted: true}) -[:TAGGED]->(t:Tag {name: \"neojp\"})\\nMATCH (u:User)-[:COMMENTED]->(c:Comment)-[:COMMENTED_ON]->(q)\\nRETURN q.link AS question_link, a.link AS accepted_answer_link, t.name AS tag_name, u.display_name AS user_name, c.score AS comment_score\\nORDER BY c.score DESC"
+}

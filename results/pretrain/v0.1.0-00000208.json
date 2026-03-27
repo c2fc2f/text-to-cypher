@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (actor1:Person {name: 'Martin Scorsese'})-[r1:ACTED_IN]->(movie1:Movie {title: 'Taxi Driver'}),\n    p2 = (actor1)-[r2:DIRECTED]->(movie2:Movie {title: 'Taxi Driver'}),\n    p3 = (movie1)-[r3:REVIEWED]->(reviewer:Person {name: 'Roger Ebert'})\nRETURN p1, p2, p3",
+    "question": "What is the most significant role Martin Scorsese played in *Taxi Driver*, and how does Roger Ebert’s review of that film compare to his perspective on his directorial debut?"
+  },
+  "cypher": "MATCH (p:Person {name: 'Martin Scorsese'})-[:ACTED_IN {roles: ['Travis Bickle']}]->(m:Movie {title: 'Taxi Driver'})\\nWITH p, m\\nMATCH (e:Person {name: 'Roger Ebert'})-[:REVIEWED {summary: 'A bleak, cynical, and ultimately tragic portrait of a young, alienated man...'}]->(m)\\nWITH p, m, e\\nMATCH (e)-[r1:REVIEWED]->(m)<-[r2:DIRECTED]-(p)\\nRETURN p.name AS director, m.title AS movie, r1.summary AS ebertReview, r2.summary AS debutReview"
+}

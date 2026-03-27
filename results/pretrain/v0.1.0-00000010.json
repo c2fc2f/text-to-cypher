@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:TAGGED]->(tag:Tag {name: 'programming'}),\n    p2 = (u:User {uuid: 123})-[r2:ASKED]->(q),\n    p3 = (u)-[r3:PROVIDED]->(a:Answer {title: 'Correct approach'})-[r4:ANSWERED]->(q),\n    p4 = (a)-[r5:COMMENTED_ON]->(q)-[:TAGGED]->(tag)-[:COMMENTED]->(c:Comment {score: 15})\nRETURN p1, p2, p3, p4",
+    "question": "How has the programming tag influenced the acceptance rate of the answer titled \"Correct approach\" in the question about building a Cypher query, and what role did the 15-point-scoring comment play in its community reception?"
+  },
+  "cypher": "MATCH (q:Question {title: \"Building a Cypher query\"})<-[:COMMENTED_ON]-(c:Comment {score: 15})\\nMATCH (a:Answer {title: \"Correct approach\"})<-[:ANSWERED]-(q)<-[:TAGGED]-(t:Tag)\\nRETURN q.acceptance_rate, t.name"
+}

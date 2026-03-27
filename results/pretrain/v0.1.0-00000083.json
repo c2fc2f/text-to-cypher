@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nCharacter {centrality: FLOAT, book45PageRank: FLOAT, fastrf_embedding: LIST, book1BetweennessCentrality: FLOAT, book1PageRank: FLOAT, louvain: INTEGER, community: INTEGER, degree: FLOAT, name: STRING, pagerank: FLOAT}\nRelationship properties:\nINTERACTS {weight: INTEGER}\nINTERACTS1 {weight: INTEGER, book: INTEGER}\nINTERACTS2 {weight: INTEGER, book: INTEGER}\nINTERACTS3 {weight: INTEGER, book: INTEGER}\nINTERACTS45 {weight: INTEGER, book: INTEGER}\nThe relationships:\n(:Character)-[:INTERACTS45]->(:Character)\n(:Character)-[:INTERACTS]->(:Character)\n(:Character)-[:INTERACTS1]->(:Character)\n(:Character)-[:INTERACTS3]->(:Character)\n(:Character)-[:INTERACTS2]->(:Character)",
+    "cypher": "MATCH\n    p1 = (a:Character {name: 'Hamlet'})-[r1:INTERACTS45]->(b:Character),\n    p2 = (a)-[r2:INTERACTS]->(c:Character {name: 'Ophelia'}),\n    p3 = (b)-[r3:INTERACTS2]->(d:Character {name: 'Polonius'})\nRETURN p1, p2, p3",
+    "question": "How do the dynamic interactions between Hamlet, Ophelia, and Polonius, as defined by their most recent collaborative weight scores in *Hamlet*, shape their evolving roles within the narrative’s central conflicts?"
+  },
+  "cypher": "MATCH (c1:Character {name: 'Hamlet'}), (c2:Character {name: 'Ophelia'}), (c3:Character {name: 'Polonius'})\\nMATCH (c1)-[i:INTERACTS45]->(c2), (c2)-[j:INTERACTS45]->(c3), (c3)-[k:INTERACTS45]->(c1)\\nRETURN c1, i, c2, j, c3, k, c1"
+}

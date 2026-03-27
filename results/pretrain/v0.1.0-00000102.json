@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\n- **User**\n  - `label`: STRING Example: \"inchristbl.bsky.social\"\n  - `key`: STRING Example: \"0\"\n  - `y`: FLOAT Example: \"6000.659\"\n  - `color`: STRING Example: \"#3CB371\"\n  - `x`: FLOAT Example: \"-4383.217\"\n  - `area`: FLOAT Example: \"2.6\"\n  - `size`: FLOAT Example: \"1.82\"\nRelationship properties:\n- **INTERACTED**\n  - `weight: INTEGER` Example: \"1\"\n  - `ogWeight: INTEGER` Example: \"1\"\n  - `size: FLOAT` Example: \"0.2\"\n  - `key: STRING` Example: \"geid_68_0\"\nThe relationships:\n(:User)-[:INTERACTED]->(:User)",
+    "cypher": "MATCH\n    p1 = (a:User {label: \"inchristbl.bsky.social\"})-[r1:INTERACTED]->(b:User),\n    p2 = (a)-[r2:INTERACTED]->(c:User {label: \"bskyapi.bsky.social\"}),\n    p3 = (b)-[r3:INTERACTED]->(d:User {label: \"davemcgowan.bsky.social\"})\nRETURN p1, p2, p3",
+    "question": "How does the engagement weight between \"inchristbl.bsky.social\" and \"bskyapi.bsky.social\" compare to the direct interactions between \"inchristbl.bsky.social\" and \"davemcgowan.bsky.social\" in the bsky.social network ecosystem?"
+  },
+  "cypher": "MATCH (u1:User {label: \"inchristbl.bsky.social\"})-[:INTERACTED {weight: ?w1}]->(m:User {label: \"bskyapi.bsky.social\"}),       (u2:User {label: \"inchristbl.bsky.social\"})-[:INTERACTED {weight: ?w2}]->(d:User {label: \"davemcgowan.bsky.social\"})\\nRETURN w1, w2"
+}

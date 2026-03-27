@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to use Neo4j?'})-[:TAGGED]->(t:Tag {name: 'Neo4j'}),\n    p2 = (u:User {uuid: 123})-[:ASKED]->(q)-[:ANSWERED]->(a:Answer {is_accepted: true}),\n    p3 = (a)-[:PROVIDED]->(u)-[:COMMENTED]->(c:Comment {score: 5})-[:COMMENTED_ON]->(q)\nRETURN p1, p2, p3",
+    "question": "How have the top-scoring answers to the \"How to use Neo4j?\" question evolved over time, and which user’s contributions have consistently received the highest engagement, as reflected in their comment scores?"
+  },
+  "cypher": "MATCH (q:Question {title: \"How to use Neo4j?\"})<-[:ANSWERED]-(a:Answer)<-[:PROVIDED]-(u:User)\\nWITH q, a, u, COUNT(a) AS answer_count, SUM(a.score) AS total_score, SUM(a.score) / COUNT(a) AS avg_score, COUNT(DISTINCT u) AS user_count\\nORDER BY avg_score DESC\\nRETURN q.title AS question_title, q.link AS question_link, a.title AS answer_title, a.link AS answer_link, u.display_name AS user_name, avg_score, user_count\\nLIMIT 1"
+}

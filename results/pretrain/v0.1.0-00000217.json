@@ -1,0 +1,9 @@
+{
+  "score": 0.8,
+  "ground": {
+    "schema": "Node properties:\n- **Question**\n  - `favorites`: INTEGER Example: \"0\"\n  - `answered`: BOOLEAN \n  - `text`: STRING Example: \"### This is:  Bug    ### Specifications  OS: Win10\"\n  - `link`: STRING Example: \"https://stackoverflow.com/questions/62224586/playg\"\n  - `createdAt`: DATE_TIME Min: 2020-06-05T16:57:19Z, Max: 2020-06-05T21:49:16Z\n  - `title`: STRING Example: \"Playground is not loading with apollo-server-lambd\"\n  - `id`: INTEGER Min: 62220505, Max: 62224586\n  - `upVotes`: INTEGER Example: \"0\"\n  - `score`: INTEGER Example: \"-1\"\n  - `downVotes`: INTEGER Example: \"1\"\n- **Tag**\n  - `name`: STRING Example: \"aws-lambda\"\n- **User**\n  - `image`: STRING Example: \"https://lh3.googleusercontent.com/-NcFYSuXU0nk/AAA\"\n  - `link`: STRING Example: \"https://stackoverflow.com/users/10251021/alexandre\"\n  - `id`: INTEGER Min: 751, Max: 13681006\n  - `reputation`: INTEGER Min: 1, Max: 420137\n  - `display_name`: STRING Example: \"Alexandre Le\"\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)",
+    "cypher": "MATCH\n    p1 = (a:Question {id: 62220505})-[r1:TAGGED]->(b:Tag {name: 'aws-lambda'}),\n    p2 = (a)-[r2:ASKED]->(c:User {id: 751}),\n    p3 = (b)-[r1:TAGGED]->(d:Tag {name: 'stackoverflow'})\nRETURN p1, p2, p3",
+    "question": "What impact does the Stack Overflow question tagged with both \"aws-lambda\" and \"stackoverflow,\" asked by Alexandre Le, have on developers working with serverless architectures?"
+  },
+  "cypher": "MATCH (q:Question)-[:TAGGED]->(t1:Tag {name: 'aws-lambda'}),       (q)-[:TAGGED]->(t2:Tag {name: 'stackoverflow'}),       (u:User {display_name: 'Alexandre Le'})-[:ASKED]->(q)\\nWHERE u.id = 751\\nRETURN q, t1, t2, u"
+}

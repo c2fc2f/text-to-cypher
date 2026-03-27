@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Martin Scorsese'})-[r1:ACTED_IN {roles: ['Director']}]->(b:Movie {title: 'Taxi Driver'}),\n    p2 = (a)-[r2:DIRECTED]->(c:Movie {title: 'Taxi Driver'}),\n    p3 = (b)-[r3:REVIEWED]->(d:Movie {title: 'Taxi Driver', tagline: 'A man who has seen too much, becomes a man who sees too little'})\nRETURN p1, p2, p3",
+    "question": "How does Martin Scorsese’s dual role as both a leading actor and director in *Taxi Driver* influence the film’s critical reception, particularly given the specific director’s notes in its tagline?"
+  },
+  "cypher": "MATCH (p:Person {name: \"Martin Scorsese\"})-[:DIRECTED]->(m:Movie {title: \"Taxi Driver\"})\\nWITH m\\nMATCH (p)-[:ACTED_IN]->(m)\\nWITH p, m\\nMATCH (p)-[:DIRECTED]->(m)<-[:DIRECTED]-(director:Person {name: \"Martin Scorsese\"})\\nWITH p, m, director\\nMATCH (director)-[:PRODUCED]->(m)\\nWITH p, m, director\\nMATCH (director)-[:DIRECTED]->(m)<-[:DIRECTED]-(director2:Person {name: \"Martin Scorsese\"})\\nWITH p, m, director, director2\\nMATCH (p)-[:ACTED_IN]->(m)<-[:REVIEWED]-(r:Person)-[:REVIEWED]->(m)\\nRETURN p, m, director, director2, r.rating AS rating, r.summary AS summary"
+}

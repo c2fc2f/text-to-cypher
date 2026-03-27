@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (director:Person {name: 'Martin Scorsese'})-[r1:DIRECTED]->(movie1:Movie {title: 'Taxi Driver'}),\n\n    p2 = (director)-[r2:ACTED_IN]->(actor1:Person {name: 'Robert De Niro'}),\n\n    p3 = (movie1)-[r3:REVIEWED]->(review:Movie {title: 'Taxi Driver'})-[r4:REVIEWED]->(reviewer:Person {name: 'Sharon Stein'})\nRETURN p1, p2, p3",
+    "question": "What’s the critical role Robert De Niro played in Martin Scorsese’s directorial work on *Taxi Driver*, and how does Sharon Stein’s review of the film reflect its cultural impact during its release year?"
+  },
+  "cypher": "MATCH (p:Person {name: 'Robert De Niro'})-[:ACTED_IN]->(m:Movie {title: 'Taxi Driver'})\\nMATCH (p)-[ai:ACTED_IN]->(m)<-[:DIRECTED]-(d:Person {name: 'Martin Scorsese'})\\nMATCH (p)-[r:REVIEWED]->(m)<-[rev:REVIEWED]-(s:Person {name: 'Sharon Stein'})\\nRETURN ai.roles AS RobertDeNiroRoles, rev.summary AS SharonSteinsReview"
+}

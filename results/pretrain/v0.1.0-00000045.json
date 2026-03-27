@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:ANSWERED]->(a:Answer {title: 'Cypher is a graph query language'})-[:COMMENTED_ON]->(q2:Question),\n    p2 = (u:User {display_name: 'GraphMaster'})-[r2:ASKED]->(q),\n    p3 = (u)-[:COMMENTED]->(c:Comment {score: 5})-[:COMMENTED_ON]->(q2)\nRETURN p1, p2, p3",
+    "question": "What insights does the answer titled *\"Cypher is a graph query language\"* provide for the follow-up question *\"How to build a Cypher query?\"* that GraphMaster scored five points on in their comment?"
+  },
+  "cypher": "MATCH (a:Answer {title: \"Cypher is a graph query language\"})-[:ANSWERED]->(q:Question)<-[:COMMENTED_ON]-(c:Comment {score: 5})\\nMATCH (q)-[:FOLLOWS_UP_QUESTION_FROM]->(f:Question)\\nRETURN f"
+}

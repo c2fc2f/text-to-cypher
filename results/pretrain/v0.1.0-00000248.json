@@ -1,0 +1,9 @@
+{
+  "score": 0.8,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (actor:Person {name: 'Martin Scorsese'})-[r1:ACTED_IN]->(movie1:Movie {title: 'Taxi Driver'}),\n    p2 = (actor)-[r2:DIRECTED]->(movie2:Movie {released: 1976}),\n    p3 = (actor)-[r3:REVIEWED]->(reviewedMovie:Movie {tagline: 'You talkin' to me?'})\nRETURN p1, p2, p3",
+    "question": "What impact did Martin Scorsese’s 1976 directorial debut have on the thematic tone of *Taxi Driver*, and how did his own review of the film reflect his personal critique of societal isolation?"
+  },
+  "cypher": "MATCH (scorsese:Person {name: \"Martin Scorsese\"})-[:DIRECTED]->(debut:Movie {released: 1976}),       (scorsese)-[:REVIEWED]->(taxiDriver:Movie {title: \"Taxi Driver\"})\\nRETURN scorsese.name AS director, debut.title AS debutMovie, taxiDriver.title AS targetMovie,       scorsese.name + \" on \" + debutMovie + \" and \" + taxiDriver + \" themes\" AS thematicImpact,       scorsese.name + \" review of \" + taxiDriver AS reviewReflection"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:TAGGED]->(t:Tag),\n    p2 = (q)-[r2:ASKED]->(u:User),\n    p3 = (q)-[r3:ANSWERED]->(a:Answer)-[r4:PROVIDED]->(u2:User)\nRETURN p1, p2, p3",
+    "question": "What trends in user engagement have emerged from the most upvoted answers to the question about building a Cypher query, and how do the tagging patterns align with the frequency of question views?"
+  },
+  "cypher": "MATCH (q:Question {title: 'building a Cypher query'})<-[:ANSWERED]-(a:Answer)<-[:PROVIDED]-(u:User)\\nWITH q, u, count(a) AS answerCount, q.viewCount AS viewCount\\nORDER BY answerCount DESC\\nMATCH (q)-[:TAGGED]->(t:Tag)\\nRETURN q.title AS questionTitle, q.viewCount AS questionViewCount, collect(t.name) AS tags, answerCount, viewCount"
+}

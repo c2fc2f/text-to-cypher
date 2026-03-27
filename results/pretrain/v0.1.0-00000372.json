@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:TAGGED]->(t:Tag {name: 'cypher'}),\n    p2 = (u:User {uuid: 123})-[r2:ASKED]->(q),\n    p3 = (a:Answer {uuid: 456})-[r3:PROVIDED]->(u)-[r4:ANSWERED]->(q)-[r5:COMMENTED_ON]->(c:Comment {uuid: 789})\nRETURN p1, p2, p3",
+    "question": "What impact does the tag \"cypher\" have on the engagement metrics of the question \"How to build a Cypher query,\" specifically for the user with UUID 123, and how does the accepted answer (UUID 456) shape the discussion around it?"
+  },
+  "cypher": "MATCH (u:User {uuid: 123})-[:ASKED]->(q:Question {title: \"How to build a Cypher query\"}), (a:Answer {uuid: 456})-[:ANSWERED]->(q)\\nMATCH (q)-[:TAGGED]->(t:Tag {name: \"cypher\"})\\nRETURN q.view_count AS impact_on_engagement, a.score AS discussion_shape"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Martin Scorsese'})-[r1:ACTED_IN]->(b:Movie {title: 'Taxi Driver'}),\n    p2 = (a)-[r2:DIRECTED]->(c:Movie {released: 1976}),\n    p3 = (b)-[r3:REVIEWED]->(d:Movie {tagline: 'You're gonna need a bigger boat'})\nRETURN p1, p2, p3",
+    "question": "How has Martin Scorsese’s directorial career at *Taxi Driver* (1976) influenced his later filmic taglines, and what thematic shifts does the review for *You’re gonna need a bigger boat* reveal about his evolving storytelling style?"
+  },
+  "cypher": "MATCH (martin:Person {name: 'Martin Scorsese'})-[:DIRECTED]->(taxi:Movie {title: 'Taxi Driver', released: 1976})\\nWITH taxi\\nMATCH (martin)-[:DIRECTED]->(m)<-[:PRODUCED]-(movie:Movie)\\nWHERE movie.tagline STARTS WITH 'influenced'\\nWITH martin, taxi, movie\\nMATCH (martin)-[:DIRECTED]->(later:Movie)<-[:REVIEWED]-(review:Person)-[:REVIEWED]->(later)\\nWHERE later.tagline STARTS WITH 'bigger boat'\\nRETURN taxi, movie, review"
+}

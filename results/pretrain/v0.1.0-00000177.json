@@ -1,0 +1,9 @@
+{
+  "score": 0.8,
+  "ground": {
+    "schema": "Node properties:\n- **User**\n  - `label`: STRING Example: \"inchristbl.bsky.social\"\n  - `key`: STRING Example: \"0\"\n  - `y`: FLOAT Example: \"6000.659\"\n  - `color`: STRING Example: \"#3CB371\"\n  - `x`: FLOAT Example: \"-4383.217\"\n  - `area`: FLOAT Example: \"2.6\"\n  - `size`: FLOAT Example: \"1.82\"\nRelationship properties:\n- **INTERACTED**\n  - `weight: INTEGER` Example: \"1\"\n  - `ogWeight: INTEGER` Example: \"1\"\n  - `size: FLOAT` Example: \"0.2\"\n  - `key: STRING` Example: \"geid_68_0\"\nThe relationships:\n(:User)-[:INTERACTED]->(:User)",
+    "cypher": "MATCH\n    p1 = (a:User {key: \"0\"})-[:INTERACTED]->(b:User),\n    p2 = (a)-[:INTERACTED]->(c:User {key: \"1\"}),\n    p3 = (b)-[:INTERACTED]->(d:User {key: \"2\"})\nRETURN p1, p2, p3",
+    "question": "How do the engagement patterns between users labeled \"0,\" \"1,\" and \"2\" reveal differences in their social network influence and interaction intensity compared to their direct connections?"
+  },
+  "cypher": "MATCH (u1:User {key: '0'})-[:INTERACTED]->(u2:User {key: '1'})-[:INTERACTED]->(u3:User {key: '2'})\\nRETURN u1, u2, u3"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Martin Scorsese'}),\n    p2 = (a)-[:DIRECTED]->(b:Movie {title: 'Taxi Driver'}),\n    p3 = (a)-[:ACTED_IN]->(c:Movie {title: 'Taxi Driver'})-[:REVIEWED]->(d:Movie {title: 'The Departed'})\nRETURN p1, p2, p3",
+    "question": "How does Martin Scorsese’s directorial and acting roles in *Taxi Driver* influence the critical reception of *The Departed*, and which specific reviews by fans of his work highlight its themes?"
+  },
+  "cypher": "MATCH (scorsese:Person {name: 'Martin Scorsese'})-[:DIRECTED]->(taxiDriver:Movie {title: 'Taxi Driver'})\\nMATCH (scorsese)-[:ACTED_IN]->(taxiDriver)<-[:ACTED_IN]-(dealtDriverActor:Person)-[:ACTED_IN]->(departed:Movie {title: 'The Departed'})\\nMATCH (departed)<-[r:REVIEWED]-(fan:Person)-[:FOLLOWS]->(scorsese)\\nRETURN taxiDriver, dealtDriverActor, departed, r, fan"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.5,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:ANSWERED]->(a:Answer),\n    p2 = (q)-[r2:TAGGED]->(t:Tag {name: 'Cypher'}),\n    p3 = (a)-[r3:PROVIDED]->(u:User {display_name: 'Neo4j Expert'})\nRETURN p1, p2, p3",
+    "question": "How have users like Neo4j Expert structured their answers to the question \"How to build a Cypher query?\" and what specific tags, like \"Cypher,\" commonly accompany those responses?"
+  },
+  "cypher": "MATCH (u:User {display_name: \"Neo4j Expert\"})-[:ASKED]->(q:Question {title: \"How to build a Cypher query?\"})\\nMATCH (q)<-[:ANSWERED]-(a:Answer)-[:TAGGED]->(t:Tag)\\nRETURN u.display_name AS user, q.title AS question, t.name AS tag"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nUser {betweenness: FLOAT, location: STRING, followers: INTEGER, following: INTEGER, profile_image_url: STRING, screen_name: STRING, name: STRING, url: STRING, statuses: INTEGER}\nMe {profile_image_url: STRING, betweenness: FLOAT, following: INTEGER, url: STRING, location: STRING, followers: INTEGER, screen_name: STRING, name: STRING}\nTweet {created_at: DATE_TIME, id: INTEGER, id_str: STRING, text: STRING, favorites: INTEGER, import_method: STRING}\nHashtag {name: STRING}\nLink {url: STRING}\nSource {name: STRING}\nRelationship properties:\nSIMILAR_TO {score: FLOAT}\nThe relationships:\n(:User)-[:FOLLOWS]->(:User)\n(:User)-[:FOLLOWS]->(:Me)\n(:User)-[:POSTS]->(:Tweet)\n(:User)-[:INTERACTS_WITH]->(:User)\n(:User)-[:SIMILAR_TO]->(:User)\n(:User)-[:SIMILAR_TO]->(:Me)\n(:Me)-[:FOLLOWS]->(:User)\n(:Me)-[:POSTS]->(:Tweet)\n(:Me)-[:INTERACTS_WITH]->(:User)\n(:Me)-[:RT_MENTIONS]->(:User)\n(:Me)-[:AMPLIFIES]->(:User)\n(:Tweet)-[:MENTIONS]->(:User)\n(:Tweet)-[:MENTIONS]->(:Me)\n(:Tweet)-[:USING]->(:Source)\n(:Tweet)-[:TAGS]->(:Hashtag)\n(:Tweet)-[:CONTAINS]->(:Link)\n(:Tweet)-[:RETWEETS]->(:Tweet)\n(:Tweet)-[:REPLY_TO]->(:Tweet)",
+    "cypher": "MATCH\n    p1 = (user:User {name: 'TechExplorer'})-[r1:FOLLOWS]->(central:User),\n    p2 = (central)-[r2:SIMILAR_TO {score: >0.7}]->(user2:User {name: 'DataSciFan'}),\n    p3 = (user)-[r3:POSTS]->(tweet:Tweet {created_at: '2023-10-05'})\nRETURN p1, p2, p3",
+    "question": "How does the engagement pattern of DataSciFan compare to TechExplorer’s tweets from October 5, 2023, given their mutual high similarity score above 0.7?"
+  },
+  "cypher": "MATCH (d:User {screen_name: 'DataSciFan'})-[:POSTS]->(tweet1:Tweet)\\nMATCH (t:User {screen_name: 'TechExplorer'})-[:POSTS]->(tweet2:Tweet)\\nWHERE date(tweet2.created_at) = date('2023-10-05') AND (d)-[:SIMILAR_TO]->(t) WITH d, t, tweet1, tweet2\\nRETURN tweet1, tweet2"
+}

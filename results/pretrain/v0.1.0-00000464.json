@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nDepartment {departmentNo: INTEGER, departmentName: STRING, sectionNo: INTEGER, sectionName: STRING}\nArticle {articleId: INTEGER, prodName: STRING, productTypeName: STRING, graphicalAppearanceNo: INTEGER, graphicalAppearanceName: STRING, colourGroupCode: INTEGER, colourGroupName: STRING, embedding: LIST}\nProduct {productCode: INTEGER, prodName: STRING, productTypeNo: INTEGER, productTypeName: STRING, productGroupName: STRING, garmentGroupNo: INTEGER, garmentGroupName: STRING, detailDesc: STRING, textEmbedding: LIST, text: STRING}\nCustomer {customerId: STRING, fn: FLOAT, active: FLOAT, clubMemberStatus: STRING, fashionNewsFrequency: STRING, age: FLOAT, postalCode: STRING}\nRelationship properties:\nCUSTOMERS_ALSO_LIKE {score: FLOAT}\nPURCHASED {txId: INTEGER, tDat: DATE, price: FLOAT, salesChannelId: INTEGER}\nThe relationships:\n(:Article)-[:FROM_DEPARTMENT]->(:Department)\n(:Article)-[:VARIANT_OF]->(:Product)\n(:Article)-[:CUSTOMERS_ALSO_LIKE]->(:Article)\n(:Customer)-[:PURCHASED]->(:Article)",
+    "cypher": "MATCH\n    p1 = (a:Article {prodName: 'Retro Cotton'})-[r1:FROM_DEPARTMENT]->(b:Department {departmentName: 'Fashion Innovation'}),\n    p2 = (a)-[r2:VARIANT_OF]->(c:Product {productCode: 1001, prodName: 'Retro Cotton Blend'}),\n    p3 = (b)-[:FROM_DEPARTMENT]->(d:Article {articleId: 4567})\nRETURN p1, p2, p3",
+    "question": "How does the department \"Fashion Innovation\" source its article 4567, and what product variations of \"Retro Cotton\" are available through that same department’s inventory?"
+  },
+  "cypher": "MATCH (a:Article {articleId: 4567})-[:FROM_DEPARTMENT]->(d:Department),       (a)-[:VARIANT_OF]->(p:Product),       (d)-[:FROM_DEPARTMENT]->(a2:Article)-[:VARIANT_OF]->(p2:Product)\\nWHERE p.productTypeName = 'Retro Cotton'\\nRETURN d, a, p, p2"
+}

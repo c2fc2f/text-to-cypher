@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {uuid: 12345})-[r1:ANSWERED]->(a:Answer),\n    p2 = (q)-[r2:TAGGED]->(t:Tag {name: 'programming'}),\n    p3 = (q)-[r3:ASKED]->(u:User {uuid: 67890})\nRETURN p1, p2, p3",
+    "question": "What impact does the programming tag have on the acceptance rate of the questions asked by user 67890, and how does it compare to the broader engagement metrics like view and answer counts?"
+  },
+  "cypher": "MATCH (u:User {uuid: 67890})-[:ASKED]->(q:Question)-[:TAGGED]->(t:Tag {name: 'programming'})\\nWITH q, t\\nMATCH (q)-[:ANSWERED]->(a:Answer)\\nWITH q, t, a\\nRETURN q.view_count, q.answer_count, avg(a.score) AS acceptance_rate, q.view_count * 1.0 / q.answer_count AS answer_view_ratio"
+}

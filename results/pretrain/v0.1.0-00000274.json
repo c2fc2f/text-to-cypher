@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to query Neo4j'})-[r1:TAGGED]->(t:Tag {name: 'Neo4j'}),\n    p2 = (q)-[r2:ASKED]->(u:User {display_name: 'TechExplorer'}),\n    p3 = (u)-[r3:PROVIDED]->(a:Answer {title: 'Cypher Best Practices'})-[:ANSWERED]->(q)\nRETURN p1, p2, p3",
+    "question": "How does the tagging of the \"Neo4j\" category influence the acceptance rate of answers provided by TechExplorer on their question about querying Neo4j?"
+  },
+  "cypher": "MATCH (u:User {display_name: \"TechExplorer\"})-[:ASKED]->(q:Question {title: \"querying Neo4j\"})\\nMATCH (q)-[:TAGGED]->(t:Tag {name: \"Neo4j\"})\\nMATCH (a:Answer)-[:ANSWERED]->(q)\\nWITH t, count(a) / count(q) AS acceptanceRate, avg(a.score) AS avgScore\\nRETURN t.name AS tag, acceptanceRate, avgScore"
+}

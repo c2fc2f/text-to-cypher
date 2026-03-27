@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a Cypher query?'})-[r1:ANSWERED]->(a:Answer {is_accepted: true}),\n    p2 = (q)-[r2:TAGGED]->(t:Tag {name: 'cypher'})-[:TAGGED]->(q2:Question {creation_date: 1674675200}),\n    p3 = (a)-[r3:PROVIDED]->(u:User {display_name: 'CypherMaster'})-[:ASKED]->(q)\nRETURN p1, p2, p3",
+    "question": "How does the most upvoted accepted answer for \"How to build a Cypher query?\" relate to the question tagged with the 'cypher' keyword, and what user contributed that response?"
+  },
+  "cypher": "MATCH (q1:Question {title: \"How to build a Cypher query?\"})<-[:ANSWERED]-(a:Answer)-[:TAGGED]->(t:Tag {name: \"cypher\"}),       (q2:Question)-[:TAGGED]->(t)<-[:ASKED]-(u:User)\\nWITH a, q2, u\\nORDER BY a.score DESC\\nLIMIT 1\\nRETURN a.link AS most_upvoted_answer_link, q2.link AS related_question_link, u.display_name AS contributing_user"
+}

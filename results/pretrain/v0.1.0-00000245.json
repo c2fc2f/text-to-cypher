@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a query in Neo4j?'})-[:TAGGED]->(t:Tag {name: 'cypher'}),\n    p2 = (u:User {uuid: 123})-[:ASKED]->(q),\n    p3 = (q)-[:ANSWERED]->(a:Answer {title: 'The correct way is...'})\nRETURN p1, p2, p3",
+    "question": "How has the question about optimizing Neo4j query performance been structured, and what specific Cypher techniques are the top-scoring answers emphasizing?"
+  },
+  "cypher": "MATCH (q:Question {title: 'Optimizing Neo4j Query Performance'})<-[:COMMENTED_ON]-(c:Comment)<-[:COMMENTED]-(u:User)-[:ASKED]->(q)\\nRETURN q.title AS question_title, q.body_markdown AS question_body, collect(c.score) AS comment_scores, collect(c.uuid) AS comment_uuids"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (actor:Person {name: 'Tom Hanks'})-[r1:ACTED_IN]->(movie1:Movie {title: 'Forrest Gump'}),\n    p2 = (actor)-[r2:DIRECTED]->(movie2:Movie {title: 'Saving Private Ryan'}),\n    p3 = (movie1)-[r3:REVIEWED]->(review:Review {summary: 'A classic'})-[r4:REVIEWED]->(actor)-[r5:FOLLOWS]->(actor2:Person {name: 'DiCaprio'})\nRETURN p1, p2, p3",
+    "question": "How does the influence of Tom Hanks’s roles and directorial work on *Forrest Gump* and *Saving Private Ryan* shape his reputation among critics who also follow Leonardo DiCaprio?"
+  },
+  "cypher": "MATCH (tom:Person {name: \"Tom Hanks\"})-[:ACTED_IN]->(forrest:Movie {title: \"Forrest Gump\"}),       (tom)-[:DIRECTED]->(forrest),       (tom)-[:ACTED_IN]->(ryan:Movie {title: \"Saving Private Ryan\"})\\nWHERE (tom)-[:DIRECTED]->(ryan)\\nMATCH (tom)-[:FOLLOWS]->(critic:Person {name: \"Leonardo DiCaprio\"})\\nMATCH (critic)-[:REVIEWED]->(forrest),       (critic)-[:REVIEWED]->(ryan)\\nRETURN \\n    (tom)-[:ACTED_IN]->(forrest)-[:REVIEWED]->(review1:Node {summary: \"Forrest Gump Review\"}),       (tom)-[:ACTED_IN]->(ryan)-[:REVIEWED]->(review2:Node {summary: \"Saving Private Ryan Review\"}),       (critic)-[:REVIEWED]->(review1),       (critic)-[:REVIEWED]->(review2)"
+}

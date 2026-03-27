@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How does X work?'})-[r1:TAGGED]->(t:Tag {name: 'Technology'}),\n    p2 = (u:User {uuid: 123})-[r2:ASKED]->(q),\n    p3 = (q)-[r3:ANSWERED]->(a:Answer {uuid: 456}),\n    p4 = (a)-[r4:PROVIDED]->(u2:User {uuid: 789})\nRETURN p1, p2, p3, p4",
+    "question": "What is the most upvoted answer provided by user 789 to the question about 'Technology' and how does it influence the broader discussion on 'How does X work?'"
+  },
+  "cypher": "MATCH (u:User {uuid: 789})-[:ASKED]->(q:Question)-[:TAGGED]->(t:Tag {name: 'Technology'})\\nMATCH (u)-[:ASKED]->(q)<-[:ANSWERED]-(a:Answer)<-[:PROVIDED]-(u)\\nMATCH (a)-[:ANSWERED]->(aq:Question)-[:TAGGED]->(at:Tag {name: 'How does X work?'})\\nWITH a, aq\\nORDER BY a.score DESC\\nLIMIT 1\\nRETURN aq AS influenced_question"
+}

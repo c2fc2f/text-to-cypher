@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Martin Scorsese'}),\n    p2 = (a)-[r2:DIRECTED {roles: ['Director']}]->(b:Movie {title: 'Taxi Driver'}), (a)-[r3:ACTED_IN]->(c:Movie {title: 'The Departed'}),\n    p3 = (b)-[r4:REVIEWED]->(d:Movie {title: 'The Departed'} {reviewed_by: 'Scorsese Review'}) {rating: 9}\nRETURN p1, p2, p3",
+    "question": "What are the key themes in Martin Scorsese’s directed roles, particularly how his critiques of \"The Departed\" reflect broader cultural critiques he’s known for?"
+  },
+  "cypher": "MATCH (p:Person {name: \"Martin Scorsese\"})-[:DIRECTED]->(m:Movie {title: \"The Departed\"})\\nWITH p, m\\nMATCH (p)-[:DIRECTED]->(m)<-[:REVIEWED]-(r:Person)-[:REVIEWED]->(m2:Movie)\\nRETURN p.name AS Director, m.title AS Movie, r.name AS Reviewer, r.summary AS ReviewSummary"
+}

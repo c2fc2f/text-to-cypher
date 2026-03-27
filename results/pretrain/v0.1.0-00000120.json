@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\n- **User**\n  - `label`: STRING Example: \"inchristbl.bsky.social\"\n  - `key`: STRING Example: \"0\"\n  - `y`: FLOAT Example: \"6000.659\"\n  - `color`: STRING Example: \"#3CB371\"\n  - `x`: FLOAT Example: \"-4383.217\"\n  - `area`: FLOAT Example: \"2.6\"\n  - `size`: FLOAT Example: \"1.82\"\nRelationship properties:\n- **INTERACTED**\n  - `weight: INTEGER` Example: \"1\"\n  - `ogWeight: INTEGER` Example: \"1\"\n  - `size: FLOAT` Example: \"0.2\"\n  - `key: STRING` Example: \"geid_68_0\"\nThe relationships:\n(:User)-[:INTERACTED]->(:User)",
+    "cypher": "MATCH\n    p1 = (user1:User {key: '0'})-[r1:INTERACTED {key: 'geid_68_0'}]->(user2:User),\n    p2 = (user1)-[r2:INTERACTED {ogWeight: 1, size: 0.2}]->(user3:User {key: '0'}),\n    p3 = (user2)-[r3:INTERACTED]->(user4:User {y: 6000.659})\nRETURN p1, p2, p3",
+    "question": "How does the interaction pattern between users with the label \"0\" and key \"geid_68_0\" compare to their broader engagement dynamics, especially considering the weight and size of smaller, high-frequency exchanges like the 1:1 connection with user3?"
+  },
+  "cypher": "MATCH (u1:User {label: '0'})-[r:INTERACTED]->(u2:User)\\nWHERE r.key = 'geid_68_0'\\nWITH u1, u2, r\\nRETURN u1.label AS User1, u2.label AS User2, r.weight AS InteractionWeight, r.size AS InteractionSize\\nORDER BY InteractionWeight DESC"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Martin Scorsese'}),\n    p2 = (a)-[:DIRECTED]->(b:Movie {title: 'Taxi Driver'}),\n    p3 = (a)-[r:ACTED_IN]->(c:Movie {title: 'Raging Bull'})-[:REVIEWED]->(d:Movie {title: 'The Departed'})\nRETURN p1, p2, p3",
+    "question": "What is the directorial influence of Martin Scorsese on *The Departed*, considering how he directed *Taxi Driver* and acted in *Raging Bull*—and how his reviews shaped its reception?"
+  },
+  "cypher": "MATCH (martin:Person {name: \"Martin Scorsese\"})-[:DIRECTED]->(departed:Movie {title: \"The Departed\"}),       (martin)-[:DIRECTED]->(taxiDriver:Movie {title: \"Taxi Driver\"}),       (martin)-[:ACTED_IN]->(ragingBull:Movie {title: \"Raging Bull\"}),       (reviewer:Person)-[:REVIEWED]->(departed)\\nRETURN martin, departed, taxiDriver, ragingBull, reviewer"
+}

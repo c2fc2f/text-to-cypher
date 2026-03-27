@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (q:Question {title: 'How to build a star graph in Cypher'})-[r1:ANSWERED]->(a:Answer {uuid: 123}),\n    p2 = (q)-[r2:TAGGED]->(t:Tag {name: 'cypher'}),\n    p3 = (a)-[r3:PROVIDED]->(u:User {uuid: 456})\nRETURN p1, p2, p3",
+    "question": "What impact does the accepted answer for the question about building a star graph in Cypher have on the engagement metrics of the user who provided it, given the tag 'cypher' is also present in the question?"
+  },
+  "cypher": "MATCH (q:Question {title: 'building a star graph in Cypher'})<-[:ANSWERED]-(a:Answer {is_accepted: true})<-[:PROVIDED]-(u:User)-[:ASKED]->(q2:Question)-[:TAGGED]->(t:Tag {name: 'cypher'})\\nRETURN u.display_name, q.view_count, q.answer_count"
+}

@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nDepartment {departmentNo: INTEGER, departmentName: STRING, sectionNo: INTEGER, sectionName: STRING}\nArticle {articleId: INTEGER, prodName: STRING, productTypeName: STRING, graphicalAppearanceNo: INTEGER, graphicalAppearanceName: STRING, colourGroupCode: INTEGER, colourGroupName: STRING, embedding: LIST}\nProduct {productCode: INTEGER, prodName: STRING, productTypeNo: INTEGER, productTypeName: STRING, productGroupName: STRING, garmentGroupNo: INTEGER, garmentGroupName: STRING, detailDesc: STRING, textEmbedding: LIST, text: STRING}\nCustomer {customerId: STRING, fn: FLOAT, active: FLOAT, clubMemberStatus: STRING, fashionNewsFrequency: STRING, age: FLOAT, postalCode: STRING}\nRelationship properties:\nCUSTOMERS_ALSO_LIKE {score: FLOAT}\nPURCHASED {txId: INTEGER, tDat: DATE, price: FLOAT, salesChannelId: INTEGER}\nThe relationships:\n(:Article)-[:FROM_DEPARTMENT]->(:Department)\n(:Article)-[:VARIANT_OF]->(:Product)\n(:Article)-[:CUSTOMERS_ALSO_LIKE]->(:Article)\n(:Customer)-[:PURCHASED]->(:Article)",
+    "cypher": "MATCH\n    p1 = (a:Department {departmentNo: 1})-[r1:FROM_DEPARTMENT]->(b:Article {articleId: 101}),\n    p2 = (a)-[r2:VARIANT_OF]->(c:Product {productCode: 205}),\n    p3 = (b)-[r3:CUSTOMERS_ALSO_LIKE]->(d:Article {articleId: 102})\nRETURN p1, p2, p3",
+    "question": "How does the product variant from department 1 with article ID 101 compare to its customer preferences, as indicated by article ID 102, in terms of product attributes and sales trends?"
+  },
+  "cypher": "MATCH (a1:Article {articleId: 101})-[:FROM_DEPARTMENT]->(d:Department {departmentNo: 1}),       (a2:Article {articleId: 102}),       (a1)-[:VARIANT_OF]->(p:Product),       (a2)-[:VARIANT_OF]->(p),       (a1)-[:CUSTOMERS_ALSO_LIKE]->(a3:Article),       (a2)-[:CUSTOMERS_ALSO_LIKE]->(a3)\\nRETURN a1, a2, p, a3"
+}

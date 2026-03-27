@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nQuestion {link: STRING, accepted_answer_id: INTEGER, creation_date: INTEGER, view_count: INTEGER, answer_count: INTEGER, body_markdown: STRING, uuid: INTEGER, title: STRING}\nUser {uuid: INTEGER, display_name: STRING}\nTag {name: STRING, link: STRING}\nAnswer {link: STRING, title: STRING, is_accepted: BOOLEAN, body_markdown: STRING, score: INTEGER, uuid: INTEGER}\nComment {score: INTEGER, uuid: INTEGER, link: STRING}\nRelationship properties:\n\nThe relationships:\n(:Question)-[:TAGGED]->(:Tag)\n(:User)-[:ASKED]->(:Question)\n(:User)-[:COMMENTED]->(:Comment)\n(:User)-[:PROVIDED]->(:Answer)\n(:Answer)-[:ANSWERED]->(:Question)\n(:Comment)-[:COMMENTED_ON]->(:Question)",
+    "cypher": "MATCH\n    p1 = (a:Question {title: 'How to query Neo4j'})-[r1:TAGGED]->(tag1:Tag {name: 'cypher'})-[:TAGGED]->(tag2:Tag {name: 'database'}),\n    p2 = (a)-[r2:ASKED]->(user1:User {display_name: 'Neo4jAdmin'}),\n    p3 = (a)-[r3:ANSWERED]->(answer1:Answer {title: 'Cypher Best Practices'})-[:PROVIDED]->(user2:User {display_name: 'DataExplorer'})-[:COMMENTED]->(comment1:Comment {score: 5})\nRETURN p1, p2, p3",
+    "question": "What are the most common database-related tags used alongside the question \"How to query Neo4j\" and how does DataExplorer’s response on best practices compare with the community’s engagement score?"
+  },
+  "cypher": "MATCH (q:Question {title: \"How to query Neo4j\"})-[:TAGGED]->(t:Tag),       (a:Answer {title: \"DataExplorer's response on best practices\"})-[:ANSWERED]->(q)<-[:COMMENTED_ON]-(c:Comment)\\nWITH t, c\\nRETURN t.name AS TagName, COUNT(c) AS CommentCount\\nORDER BY CommentCount DESC"
+}

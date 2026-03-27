@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\nCharacter {centrality: FLOAT, book45PageRank: FLOAT, fastrf_embedding: LIST, book1BetweennessCentrality: FLOAT, book1PageRank: FLOAT, louvain: INTEGER, community: INTEGER, degree: FLOAT, name: STRING, pagerank: FLOAT}\nRelationship properties:\nINTERACTS {weight: INTEGER}\nINTERACTS1 {weight: INTEGER, book: INTEGER}\nINTERACTS2 {weight: INTEGER, book: INTEGER}\nINTERACTS3 {weight: INTEGER, book: INTEGER}\nINTERACTS45 {weight: INTEGER, book: INTEGER}\nThe relationships:\n(:Character)-[:INTERACTS45]->(:Character)\n(:Character)-[:INTERACTS]->(:Character)\n(:Character)-[:INTERACTS1]->(:Character)\n(:Character)-[:INTERACTS3]->(:Character)\n(:Character)-[:INTERACTS2]->(:Character)",
+    "cypher": "MATCH\n    p1 = (a:Character {name: 'Hamlet'})-[r1:INTERACTS45]->(b:Character),\n    p2 = (a)-[r2:INTERACTS]->(c:Character {name: 'Ophelia'}),\n    p3 = (b)-[r3:INTERACTS2]->(d:Character {name: 'Claudius'})\nRETURN p1, p2, p3",
+    "question": "How does the dynamic of Hamlet’s interactions with Claudius, mediated through Ophelia, influence the perceived power balance within the play’s key relationships?"
+  },
+  "cypher": "MATCH (hamlet:Character {name: \"Hamlet\"}), (claudius:Character {name: \"Claudius\"}), (ophelia:Character {name: \"Ophelia\"})\\nMATCH (hamlet)-[:INTERACTS|INTERACTS1|INTERACTS2|INTERACTS3|INTERACTS45]-(ophelia)-[:INTERACTS|INTERACTS1|INTERACTS2|INTERACTS3|INTERACTS45]-(claudius)\\nRETURN DISTINCT ((hamlet)-[*15]-(claudius)) AS HamletClaudiusPowerBalance"
+}

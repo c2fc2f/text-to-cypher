@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (actor:Person {name: 'Martin Scorsese'})-[r1:ACTED_IN]->(movie1:Movie {title: 'Taxi Driver'}),\n    p2 = (actor)-[r2:DIRECTED]->(movie2:Movie {released: 1976}),\n    p3 = (actor)-[r3:REVIEWED]->(movie3:Movie {tagline: 'You talkin' to me?'})\nRETURN p1, p2, p3",
+    "question": "What is the critical role Scorsese played in *Taxi Driver* and how does his directorial debut in 1976 compare to his later critical reception, as evidenced by the tagline from one of his early reviews?"
+  },
+  "cypher": "MATCH (p:Person {name: \"Martin Scorsese\"})-[:DIRECTED]->(m:Movie {title: \"Taxi Driver\"})\\nMATCH (p)-[a:ACTED_IN]->(m)\\nWITH a.roles AS critical_role\\nMATCH (p)-[:DIRECTED]->(m2:Movie)\\nWHERE m2.released = 1976\\nMATCH (p)-[r:REVIEWED]->(m2)\\nWITH critical_role, r.summary AS 1976_review_summary\\nRETURN critical_role, 1976_review_summary"
+}

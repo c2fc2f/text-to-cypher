@@ -1,0 +1,9 @@
+{
+  "score": 0.3,
+  "ground": {
+    "schema": "Node properties:\nMovie {title: STRING, votes: INTEGER, tagline: STRING, released: INTEGER}\nPerson {born: INTEGER, name: STRING}\nRelationship properties:\nACTED_IN {roles: LIST}\nREVIEWED {summary: STRING, rating: INTEGER}\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Martin Scorsese'})-[r1:ACTED_IN]->(b:Movie {title: 'Taxi Driver'}),\n    p2 = (a)-[r2:DIRECTED]->(c:Movie {released: 1976}),\n    p3 = (b)-[r3:REVIEWED]->(d:Movie {tagline: 'You're gonna need a bigger boat'})\nRETURN p1, p2, p3",
+    "question": "How does Martin Scorsese’s directorial role in *Taxi Driver* (released 1976) compare to his performance in the film *You’re gonna need a bigger boat*, and what critical reception did it receive?"
+  },
+  "cypher": "MATCH (p:Person {name: 'Martin Scorsese'})-[:DIRECTED]->(m1:Movie {title: 'Taxi Driver', released: 1976}),       (p)-[:DIRECTED]->(m2:Movie {title: 'You\\'re gonna need a bigger boat'})\\nWITH m1, m2,        p1 = (p)-[:DIRECTED]->(m1),        p2 = (p)-[:DIRECTED]->(m2)\\nMATCH (p)-[:REVIEWED]->(m1)-[r1:REVIEWED]->(r1:Movie)<-[:REVIEWED]-(p2:Person {name: 'Martin Scorsese'})\\nRETURN p1, p2, r1.summary AS TaxiDriverReception, r1.rating AS TaxiDriverRating,        r1.summary AS YoureGonnaNeedABiggerBoatReception, r1.rating AS YoureGonnaNeedABiggerBoatRating"
+}

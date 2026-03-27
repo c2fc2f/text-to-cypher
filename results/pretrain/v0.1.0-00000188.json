@@ -1,0 +1,9 @@
+{
+  "score": 0.0,
+  "ground": {
+    "schema": "Node properties:\n- **Movie**\n  - `title`: STRING Example: \"The Matrix\"\n  - `votes`: INTEGER Min: 1, Max: 5259\n  - `tagline`: STRING Example: \"Welcome to the Real World\"\n  - `released`: INTEGER Min: 1975, Max: 2012\n- **Person**\n  - `born`: INTEGER Min: 1929, Max: 1996\n  - `name`: STRING Example: \"Keanu Reeves\"\nRelationship properties:\n- **ACTED_IN**\n  - `roles: LIST` Min Size: 1, Max Size: 6\n- **REVIEWED**\n  - `summary: STRING` Available options: ['Pretty funny at times', 'A solid romp', 'Silly, but fun', 'You had me at Jerry', 'An amazing journey', 'Slapstick redeemed only by the Robin Williams and ', 'Dark, but compelling', 'The coolest football movie ever', 'Fun, but a little far fetched']\n  - `rating: INTEGER` Min: 45, Max:  100\nThe relationships:\n(:Person)-[:ACTED_IN]->(:Movie)\n(:Person)-[:DIRECTED]->(:Movie)\n(:Person)-[:PRODUCED]->(:Movie)\n(:Person)-[:WROTE]->(:Movie)\n(:Person)-[:FOLLOWS]->(:Person)\n(:Person)-[:REVIEWED]->(:Movie)",
+    "cypher": "MATCH\n    p1 = (a:Person {name: 'Keanu Reeves'})-[:ACTED_IN]->(b:Movie {title: 'The Matrix'}),\n    p2 = (a)-[:DIRECTED]->(c:Movie {released: 1999}),\n    p3 = (b)-[:REVIEWED]->(d:Movie {tagline: 'Welcome to the Real World'})\nRETURN p1, p2, p3",
+    "question": "What was the exact role Keanu Reeves played in *The Matrix*, and how did his involvement influence the film’s reception based on the reviews from fans who followed him?"
+  },
+  "cypher": "MATCH (p:Person {name: 'Keanu Reeves'})-[r:ACTED_IN]->(m:Movie {title: 'The Matrix'})\\nWITH p, r, m\\nMATCH (p)-[:FOLLOWS]->(follower:Person)\\nMATCH (follower)-[:REVIEWED]->(m)\\nRETURN p.name AS actor, r.roles AS roles, m.title AS movie, follower.name AS follower, r.roles AS role"
+}
