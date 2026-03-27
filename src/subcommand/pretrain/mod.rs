@@ -1,6 +1,5 @@
 use std::{ffi::OsStr, fs::File, path::PathBuf, time::Instant};
 
-use super::{Response, ValidationResult};
 use clap::Args;
 use futures::{StreamExt, stream};
 use rig::{
@@ -10,6 +9,8 @@ use rig::{
     providers::ollama::{self, OllamaExt},
 };
 use serde_json::json;
+
+use crate::models::{Dataset, ValidationEntry};
 
 #[derive(Args)]
 /// Test the pretrain model of cypher generation against a dataset
@@ -95,8 +96,7 @@ You are a specialized Neo4j Cypher generator. Your sole purpose is to translate 
 ")
         .build();
 
-    let dataset: Vec<Response> =
-        serde_json::from_reader(File::open(&args.dataset)?)?;
+    let dataset: Dataset = serde_json::from_reader(File::open(&args.dataset)?)?;
 
     stream::iter(dataset.into_iter().enumerate().skip(args.skip))
         .for_each_concurrent(args.thread, async |(k, response)| {
@@ -151,7 +151,7 @@ You are a specialized Neo4j Cypher generator. Your sole purpose is to translate 
                     f32::NAN
                 });
 
-                let validation: ValidationResult = ValidationResult {
+                let validation: ValidationEntry = ValidationEntry {
                     score,
                     ground: response.clone(),
                     cypher,

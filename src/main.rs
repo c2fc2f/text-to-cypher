@@ -1,7 +1,9 @@
+pub mod models;
 mod subcommand;
 
 use clap::{Parser, Subcommand};
 use subcommand::{dataset, pretrain, stats};
+use subcommand_macro::Dispatch;
 
 #[derive(Parser)]
 #[command(version, propagate_version = true)]
@@ -15,7 +17,7 @@ pub(crate) struct Cli {
     pub(crate) command: Command,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Dispatch)]
 pub(crate) enum Command {
     Stats(stats::SubArgs),
     Pretrain(pretrain::SubArgs),
@@ -24,13 +26,5 @@ pub(crate) enum Command {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let cli: Cli = Cli::parse();
-
-    match cli.command {
-        Command::Stats(subargs) => stats::run(subargs).await,
-        Command::Pretrain(subargs) => pretrain::run(subargs).await,
-        Command::Dataset(subargs) => dataset::run(subargs).await,
-    }?;
-
-    Ok(())
+    Cli::parse().command.dispatch().await
 }

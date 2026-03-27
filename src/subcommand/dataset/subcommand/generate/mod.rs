@@ -17,7 +17,7 @@ use serde::Deserialize;
 use serde_json::json;
 use tokio::sync::Mutex;
 
-use crate::subcommand::Response;
+use crate::models::{Dataset, DatasetEntry};
 
 #[derive(Args)]
 /// Generate a dataset of natural language queries and their Cypher requests
@@ -32,7 +32,7 @@ pub(crate) struct SubArgs {
     #[arg(short, long)]
     count: u64,
     /// Number of parallel generations
-    #[arg(short, long)]
+    #[arg(short = None, long, default_value_t = 1)]
     thread: usize,
     /// Generator model
     #[arg(short, long, default_value = "ministral-3:3b")]
@@ -48,7 +48,7 @@ struct Schema {
 }
 
 struct Saver {
-    data: Vec<Response>,
+    data: Dataset,
     file: File,
 }
 
@@ -179,7 +179,7 @@ You are a professional Strategic Analyst. Your goal is to transform a Cypher que
         };
 
         let mut s = saver.lock().await;
-        s.data.push(Response {
+        s.data.push(DatasetEntry {
             schema: schema.to_string(),
             cypher,
             question: nl

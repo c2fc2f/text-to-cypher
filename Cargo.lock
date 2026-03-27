@@ -2497,6 +2497,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "subcommand-macro"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
 name = "subtle"
 version = "2.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2642,6 +2651,7 @@ dependencies = [
  "rig-core",
  "serde",
  "serde_json",
+ "subcommand-macro",
  "tokio",
 ]
 

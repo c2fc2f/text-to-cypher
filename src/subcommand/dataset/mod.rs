@@ -2,6 +2,7 @@ mod subcommand;
 
 use clap::{Args, Subcommand};
 use subcommand::generate;
+use subcommand_macro::Dispatch;
 
 #[derive(Args)]
 /// Manage datasets for Cypher generation
@@ -13,15 +14,11 @@ pub(crate) struct SubArgs {
     pub(crate) command: Command,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Dispatch)]
 pub(crate) enum Command {
     Generate(generate::SubArgs),
 }
 
 pub(crate) async fn run(args: SubArgs) -> anyhow::Result<()> {
-    match args.command {
-        Command::Generate(subargs) => generate::run(subargs).await,
-    }?;
-
-    Ok(())
+    args.command.dispatch().await
 }
