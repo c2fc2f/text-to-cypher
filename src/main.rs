@@ -1,5 +1,6 @@
 pub mod models;
 mod subcommand;
+pub mod utils;
 
 use clap::{Parser, Subcommand};
 use subcommand::{dataset, pretrain, stats};

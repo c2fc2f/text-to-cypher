@@ -27,13 +27,13 @@ pub(crate) struct SubArgs {
     schemas: PathBuf,
     /// Path to the result file
     #[arg(short, long)]
-    result: PathBuf,
+    output: PathBuf,
     /// Number of data entries to generate
     #[arg(short, long)]
     count: u64,
     /// Number of parallel generations
     #[arg(short = None, long, default_value_t = 1)]
-    thread: usize,
+    threads: usize,
     /// Generator model
     #[arg(short, long, default_value = "ministral-3:3b")]
     generator: String,
@@ -66,7 +66,7 @@ pub(crate) async fn run(args: SubArgs) -> Result<()> {
     let client: Client<OllamaExt> = ollama::Client::new(Nothing)?;
     let saver: Arc<Mutex<Saver>> = Arc::new(Mutex::new(Saver {
         data: vec![],
-        file: File::create(args.result)?,
+        file: File::create(args.output)?,
     }));
 
     if schemas.is_empty() {
@@ -91,7 +91,7 @@ pub(crate) async fn run(args: SubArgs) -> Result<()> {
     pb.set_draw_target(ProgressDrawTarget::stdout());
     pb.enable_steady_tick(Duration::from_millis(1000));
 
-    stream::iter(0..args.count).for_each_concurrent(args.thread, |_| async {
+    stream::iter(0..args.count).for_each_concurrent(args.threads, |_| async {
         let saver = Arc::clone(&saver);
         let mut rng: ThreadRng = rng();
 

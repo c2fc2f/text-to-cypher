@@ -15,3 +15,8 @@ pub struct ValidationEntry {
     pub ground: DatasetEntry,
     pub cypher: String,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct EvaluationDatasetEntry {
+    pub score: f32,
+}

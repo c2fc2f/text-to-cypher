@@ -39,3 +39,4 @@ indicatif = "0.18"
 ratatui = "0.30"
 crossterm = "0.29"
 subcommand-macro = { path = "./crates/subcommand/" }
+regex = "1"

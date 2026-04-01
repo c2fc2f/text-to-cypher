@@ -17,7 +17,13 @@ rustPlatform.buildRustPackage {
       # don't include in build
       lib.fileset.unions [
         ../README.md
-        ../LICENSE
+        ../LICENSE-APACHE
+        ../LICENSE-APACHE
+        ../flake.lock
+        ../flake.nix
+        ../nix
+        ../results
+        ../data
       ]
     );
   };
@@ -43,6 +49,7 @@ rustPlatform.buildRustPackage {
 
   meta = with lib; {
     description = "A comparative study of two query generation architectures for Neo4j: 1) Direct Translation (Natural Language directly to Cypher) and 2) Staged Translation (Natural Language to CNL/SQUALL/Sparklis, then to Cypher via a fine-tuned model)";
+    mainProgram = "t2c";
     homepage = "https://github.com/c2fc2f/text-to-cypher";
     license = licenses.mit;
     maintainers = [ maintainers.c2fc2f ];

@@ -1,0 +1,1 @@
+FROM ./text-to-cypher-Gemma-3-4B-Instruct-2025.04.0.Q8_0.gguf

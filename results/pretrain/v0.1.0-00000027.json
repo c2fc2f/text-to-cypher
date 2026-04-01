@@ -5,5 +5,5 @@
     "cypher": "MATCH\n    p1 = (a:User {name: 'TechExplorer'})-[r1:FOLLOWS]->(b:Me {screen_name: 'TechNerd'}),\n    p2 = (a)-[r2:POSTS]->(c:Tweet {text: 'New tech trends!'})-[:TAGS]->(d:Hashtag {name: 'Tech2024'}),\n    p3 = (b)-[r3:SIMILAR_TO {score: >0.7}]->(e:User {name: 'DataSavvy'})\nRETURN p1, p2, p3",
     "question": "How do the connections between TechExplorer, TechNerd, and DataSavvy influence the engagement patterns around the hashtag #Tech2024 in their recent tweets?"
   },
-  "cypher": "MATCH (u1:User {name: 'TechExplorer'})-[:POSTS]->(t1:Tweet)-[:TAGS]->(h:Hashtag {name: 'Tech2024'}),       (u2:User {name: 'TechNerd'})-[:POSTS]->(t2:Tweet)-[:TAGS]->(h),       (u3:User {name: 'DataSavvy'})-[:POSTS]->(t3:Tweet)-[:TAGS]->(h)\\nWITH u1, u2, u3, t1, t2, t3\\nMATCH (u1)-[:INTERACTS_WITH*]->(u2), (u1)-[:INTERACTS_WITH*]->(u3),       (u2)-[:INTERACTS_WITH*]->(u3)\\nRETURN t1, t2, t3"
+  "cypher": "MATCH (u1:User {name: 'TechExplorer'})-[:POSTS]->(t1:Tweet)-[:TAGS]->(h:Hashtag {name: 'Tech2024'}),       (u2:User {name: 'TechNerd'})-[:POSTS]->(t2:Tweet)-[:TAGS]->(h),       (u3:User {name: 'DataSavvy'})-[:POSTS]->(t3:Tweet)-[:TAGS]->(h)\\nWITH u1, u2, u3, t1, t2, t3\\nMATCH (u1)-[:INTERACTS_WITH*]->(u2), (u1)-[:INTERACTS_WITH*]->(u3),       (u2)-[:INTERACTS_WITH*]->(u3)\\nRETURN u1, u2, u3, collect(t1), collect(t2), collect(t3)"
 }

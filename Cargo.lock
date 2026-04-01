@@ -2648,6 +2648,7 @@ dependencies = [
  "indicatif",
  "rand 0.10.0",
  "ratatui",
+ "regex",
  "rig-core",
  "serde",
  "serde_json",

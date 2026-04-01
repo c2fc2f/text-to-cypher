@@ -10,7 +10,10 @@ use rig::{
 };
 use serde_json::json;
 
-use crate::models::{Dataset, ValidationEntry};
+use crate::{
+    models::{Dataset, ValidationEntry},
+    utils::find_first_float,
+};
 
 #[derive(Args)]
 /// Test the pretrain model of cypher generation against a dataset
@@ -20,12 +23,12 @@ pub(crate) struct SubArgs {
     dataset: PathBuf,
     /// Path to the result folder
     #[arg(short, long)]
-    result: PathBuf,
+    output: PathBuf,
     /// Number of parallel tests
     #[arg(short, long)]
-    thread: usize,
+    threads: usize,
     /// Number of entries to skip
-    #[arg(short, long, default_value_t = 0usize)]
+    #[arg(short, long, default_value_t = 0)]
     skip: usize,
     /// Validator model
     #[arg(short, long, default_value = "ministral-3:3b")]
@@ -99,7 +102,7 @@ You are a specialized Neo4j Cypher generator. Your sole purpose is to translate 
     let dataset: Dataset = serde_json::from_reader(File::open(&args.dataset)?)?;
 
     stream::iter(dataset.into_iter().enumerate().skip(args.skip))
-        .for_each_concurrent(args.thread, async |(k, response)| {
+        .for_each_concurrent(args.threads, async |(k, response)| {
             loop {
                 let start: Instant = Instant::now();
                 let message = format!(
@@ -130,26 +133,12 @@ You are a specialized Neo4j Cypher generator. Your sole purpose is to translate 
                     }
                 };
 
-                let mut seen_dot: bool = false;
-
-                let score: String = score
-                    .lines()
-                    .next()
-                    .unwrap_or(&score)
-                    .chars()
-                    .filter(|&c| {
-                        if c == '.' {
-                            !std::mem::replace(&mut seen_dot, true)
-                        } else {
-                            !c.is_alphabetic() && !c.is_whitespace() && !matches!(c, '*' | '_' | '"' | '-' | '—' | '(' | ')' | ':' | ',' | '\'' | '’')
-                        }
-                    })
-                    .collect::<String>();
-
-                let score: f32 = score.parse().unwrap_or_else(|_| {
-                    eprintln!("Error on metric parsing: {k}\n{score}");
-                    f32::NAN
-                });
+                let score: f32 = find_first_float(&score)
+                    .map(|s| if !(0.0..=1.0).contains(&s) { f32::NAN } else { s })
+                    .unwrap_or_else(|| {
+                        eprintln!("Error on metric parsing: {k}\n{score}");
+                        f32::NAN
+                    });
 
                 let validation: ValidationEntry = ValidationEntry {
                     score,
@@ -157,7 +146,7 @@ You are a specialized Neo4j Cypher generator. Your sole purpose is to translate 
                     cypher,
                 };
 
-                let mut path: PathBuf = args.result.clone();
+                let mut path: PathBuf = args.output.clone();
                 path.push(format!("{}-{k:08}.json", prefix.to_string_lossy()));
 
                 let Ok(file) = File::create(path) else {
@@ -172,7 +161,10 @@ You are a specialized Neo4j Cypher generator. Your sole purpose is to translate 
 
                 let stop: Instant = Instant::now();
 
-                println!("Finish {k} in {:#?}", stop.duration_since(start));
+                println!(
+                    "Finish {k} in {:#?} ({score})", 
+                    stop.duration_since(start)
+                );
 
                 break;
             };
