@@ -13,19 +13,12 @@ rustPlatform.buildRustPackage {
 
   src = lib.fileset.toSource {
     root = ../.;
-    fileset = lib.fileset.difference ../. (
-      # don't include in build
-      lib.fileset.unions [
-        ../README.md
-        ../LICENSE-APACHE
-        ../LICENSE-APACHE
-        ../flake.lock
-        ../flake.nix
-        ../nix
-        ../results
-        ../data
-      ]
-    );
+    fileset = lib.fileset.unions [
+      ../src
+      ../crates
+      ../Cargo.lock
+      ../Cargo.toml
+    ];
   };
 
   inherit buildFeatures;
