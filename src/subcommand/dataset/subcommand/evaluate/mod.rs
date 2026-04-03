@@ -12,7 +12,7 @@ use serde_json::json;
 
 use crate::{
     models::{Dataset, EvaluationDatasetEntry},
-    utils::find_first_float,
+    utils::find_last_float,
 };
 
 #[derive(Args)]
@@ -28,8 +28,11 @@ pub(crate) struct SubArgs {
     /// Number of parallel tests
     #[arg(short, long)]
     threads: usize,
+    /// Number of entries to skip
+    #[arg(short, long, default_value_t = 0)]
+    skip: usize,
     /// Validator model
-    #[arg(short, long, default_value = "deepseek-r1:1.5b")]
+    #[arg(short, long, default_value = "nemotron-3-nano:4b")]
     validator: String,
 }
 
@@ -44,6 +47,7 @@ pub(crate) async fn run(args: SubArgs) -> anyhow::Result<()> {
         .additional_params(json!({
             "num_ctx": 4096,
             "num_thread": 16,
+            "think": true,
         }))
         .preamble("\
 **ROLE**
@@ -76,58 +80,57 @@ Do not output explanations, justifications, markdown formatting, or any addition
 
     let dataset: Dataset = serde_json::from_reader(File::open(&args.dataset)?)?;
 
-    stream::iter(dataset.into_iter().enumerate())
+    stream::iter(dataset.into_iter().enumerate().skip(args.skip))
         .for_each_concurrent(args.threads, async |(k, response)| {
-            loop {
-                let start: Instant = Instant::now();
+            let start: Instant = Instant::now();
 
-                let prompt_content: String = format!(
-                    "Graph Schema: {}\nCypher Query: {}\nNL Query{}\nScore from 0 to 1:",
-                    response.schema, response.cypher, response.question,
-                );
+            let prompt_content: String = format!(
+                "Graph Schema:\n{}\nCypher Query:\n{}\nNL Query:\n{}\nScore from 0 to 1:",
+                response.schema, response.cypher, response.question,
+            );
 
-                let score: String =
-                    match validator.chat(prompt_content, vec![]).await {
-                        Ok(m) => m,
-                        Err(e) => {
-                            eprintln!("Error on metric: {k}\n{e}");
-                            continue;
+            let score: f32 = match validator.chat(prompt_content, vec![]).await {
+                Ok(score) => find_last_float(&score)
+                    .map(|s| {
+                        if !(0.0..=1.0).contains(&s) {
+                            f32::NAN
+                        } else {
+                            s
                         }
-                    };
-
-                let score: f32 = find_first_float(&score)
-                    .map(|s| if !(0.0..=1.0).contains(&s) { f32::NAN } else { s })
+                    })
                     .unwrap_or_else(|| {
                         eprintln!("Error on metric parsing: {k}\n{score}");
                         f32::NAN
-                    });
+                    }),
+                Err(e) => {
+                    eprintln!("Error on metric: {k}\n{e}");
+                    f32::NAN
+                }
+            }; 
 
-                let evaluation: EvaluationDatasetEntry = EvaluationDatasetEntry {
-                    score
-                };
+            let evaluation: EvaluationDatasetEntry = EvaluationDatasetEntry {
+                score
+            };
 
-                let mut path: PathBuf = args.output.clone();
-                path.push(format!("{}-{k:08}.json", prefix.to_string_lossy()));
+            let mut path: PathBuf = args.output.clone();
+            path.push(format!("{}-{k:08}.json", prefix.to_string_lossy()));
 
-                let Ok(file) = File::create(path) else {
-                    eprintln!("Error on creating the result file {}", k);
-                    continue;
-                };
+            let Ok(file) = File::create(path) else {
+                eprintln!("Error on creating the result file {}", k);
+                return;
+            };
 
-                let Ok(_) = serde_json::to_writer_pretty(file, &evaluation) else {
-                    eprintln!("Error on saving the result into the file {}", k);
-                    continue;
-                };
+            let Ok(_) = serde_json::to_writer_pretty(file, &evaluation) else {
+                eprintln!("Error on saving the result into the file {}", k);
+                return;
+            };
 
-                let stop: Instant = Instant::now();
+            let stop: Instant = Instant::now();
 
-                println!(
-                    "Finish {k} in {:#?} ({score})", 
-                    stop.duration_since(start)
-                );
-
-                break;
-            }
+            println!(
+                "Finish {k} in {:#?} ({score})", 
+                stop.duration_since(start)
+            );
         })
         .await;
 

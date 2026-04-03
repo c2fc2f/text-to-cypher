@@ -41,7 +41,7 @@ The pretrain subcommand defaults to `text-to-cypher-gemma3-2025:4b`, a fine-tune
    ollama create text-to-cypher-gemma3-2025:4b -f data/text-to-cypher-gemma3-2025:4b/Modelfile
    ```
 
-Any Ollama-compatible model works for dataset generation and evaluation. The defaults are chosen deliberately: `ministral-3:3b` generates the dataset and also serves as the semantic validator — using the same model that wrote the natural language questions makes sense, since it has a stronger grasp of their intent. Dataset evaluation is handled by `deepseek-r1:1.5b` to provide an unbiased, external perspective and avoid the "self-grading" bias.
+Any Ollama-compatible model works for dataset generation and evaluation. The defaults are chosen deliberately: `ministral-3:3b` generates the dataset and also serves as the semantic validator — using the same model that wrote the natural language questions makes sense, since it has a stronger grasp of their intent. Dataset evaluation is handled by `nemotron-3-nano:4b` to provide an unbiased, external perspective and avoid the "self-grading" bias.
 
 ## Usage
 
@@ -77,7 +77,7 @@ t2c dataset evaluate \
   --dataset result/datasets/dataset.json \
   --output result/dataset/evaluate/ \
   --threads 4 \
-  --validator deepseek-r1:1.5b
+  --validator nemotron-3-nano:4b
 ```
 
 | Flag | Description |
@@ -85,7 +85,8 @@ t2c dataset evaluate \
 | `-d, --dataset` | Path to the dataset file |
 | `-o, --output` | Directory where per-entry result files are written |
 | `-t, --threads` | Number of parallel validations |
-| `-v, --validator` | Ollama model to use as judge (default: `deepseek-r1:1.5b`) |
+| `-s, --skip` | Number of entries to skip (useful for resuming) |
+| `-v, --validator` | Ollama model to use as judge (default: `nemotron-3-nano:4b`) |
 
 ### Pretrain benchmark
 
